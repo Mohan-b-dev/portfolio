@@ -1,0 +1,22 @@
+{
+  "name": "MOHAN",
+  "greeting": "👋 Welcome to my portfolio",
+  "description": "Crafting digital experiences with cutting-edge technology and innovative design. Passionate about creating solutions that make a difference.",
+  "roles": [
+    "Full-Stack Developer",
+    "BLOCKCHAIN DEVELOPER",
+    "APP DEVELOPER",
+    "Problem Solver",
+    "Creative Thinker"
+  ],
+  "stats": {
+    "experience": "4+",
+    "projects": "100+",
+    "clients": "50+"
+  },
+  "socialLinks": {
+    "github": "https://github.com",
+    "linkedin": "https://linkedin.com",
+    "email": "mailto:hello@johndoe.dev"
+  }
+}

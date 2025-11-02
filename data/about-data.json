@@ -1,0 +1,14 @@
+{
+  "stats": {
+    "experience": 6,
+    "projects": 100,
+    "clients": 50,
+    "commits": 2000
+  },
+  "description1": "I'm a passionate full-stack developer with over 5 years of experience creating digital solutions that bridge the gap between design and technology. My journey began with a curiosity for how things work, which evolved into a love for building applications that solve real-world problems.",
+  "description2": "I am specialize in modern web technologies including React, TypeScript, Node.js, and cloud platforms. When I'm not coding, you'll find me exploring new technologies, contributing to open source, or mentoring aspiring developers.",
+  "mission": "To create digital experiences that not only look beautiful but also perform exceptionally well and provide genuine value to users.",
+  "location": "Remote",
+  "availability": "Available for new projects",
+  "techStack": "React,TypeScript,Node.js,Python,AWS,Docker"
+}

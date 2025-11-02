@@ -1,65 +1,155 @@
-import Image from "next/image";
+// app/page.tsx
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Skills from "@/components/Skills ";
+import Projects from "@/components/Projects ";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 
 export default function Home() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [scrollPercentage, setScrollPercentage] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // ---------- Custom cursor ----------
+  const cursorRef = useRef<HTMLDivElement>(null);
+
+  // ---------- Mount + theme ----------
+  useEffect(() => {
+    setMounted(true);
+
+    const saved = localStorage.getItem("darkMode");
+    if (saved !== null) {
+      setDarkMode(JSON.parse(saved));
+    } else {
+      setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    }
+  }, []);
+
+  // ---------- Dark-mode toggle ----------
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("darkMode", JSON.stringify(newMode));
+  };
+
+  // ---------- Scroll progress ----------
+  useEffect(() => {
+    const onScroll = () => {
+      const winScroll = window.pageYOffset;
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      setScrollPercentage(scrolled);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // ---------- Custom cursor (desktop only) ----------
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
+    const move = (e: MouseEvent) => {
+      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    };
+
+    const addHover = () => cursor.classList.add("hover");
+    const removeHover = () => cursor.classList.remove("hover");
+
+    const interactives = document.querySelectorAll(
+      "a, button, [role='button'], input[type='button'], input[type='submit'], input[type='reset'], label[for], select, summary"
+    );
+
+    interactives.forEach((el) => {
+      el.addEventListener("mouseenter", addHover);
+      el.addEventListener("mouseleave", removeHover);
+    });
+
+    window.addEventListener("mousemove", move);
+
+    return () => {
+      window.removeEventListener("mousemove", move);
+      interactives.forEach((el) => {
+        el.removeEventListener("mouseenter", addHover);
+        el.removeEventListener("mouseleave", removeHover);
+      });
+    };
+  }, []);
+
+  // ---------- Prevent FOUC ----------
+  if (!mounted) return null;
+
+  // ---------- Dark-mode aware cursor color ----------
+  const cursorBg = darkMode
+    ? "rgba(167, 139, 250, 0.35)" // purple-ish for dark
+    : "rgba(124, 58, 237, 0.35)"; // violet for light
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      }`}
+    >
+      {/* ---------- Scroll Progress Bar ---------- */}
+      <div className="fixed top-0 left-0 w-full h-1 z-50 pointer-events-none">
+        <div
+          className="h-full bg-gradient-to-r from-purple-600 to-blue-600 transition-all duration-300"
+          style={{ width: `${scrollPercentage}%` }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
+
+      {/* ---------- Sections ---------- */}
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Hero darkMode={darkMode} />
+      <About darkMode={darkMode} />
+      <Skills darkMode={darkMode} />
+      <Projects darkMode={darkMode} />
+      <Contact darkMode={darkMode} />
+      <Footer darkMode={darkMode} />
+
+      {/* ---------- Back-to-top ---------- */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-6 right-6 p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110 z-40 ${
+          scrollPercentage > 10
+            ? "opacity-100"
+            : "opacity-0 pointer-events-none"
+        } bg-gradient-to-r from-purple-600 to-blue-600 text-white`}
+        aria-label="Scroll to top"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 10l7-7m0 0l7 7m-7-7v18"
+          />
+        </svg>
+      </button>
+
+      {/* ---------- Custom Cursor (desktop only) ---------- */}
+      <div
+        ref={cursorRef}
+        className="custom-cursor hidden lg:block"
+        style={{ backgroundColor: cursorBg }}
+      />
+
+      {/* ---------- Global inline styles (kept for scroll-behavior) ---------- */}
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
     </div>
   );
 }
