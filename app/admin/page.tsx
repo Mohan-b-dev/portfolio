@@ -269,12 +269,12 @@ const Admin = () => {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full transform transition-all duration-300 hover:shadow-3xl">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 transform transition-transform duration-300 hover:scale-110">
               <Lock className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Admin Access
             </h1>
             <p className="text-gray-600 text-sm">
@@ -284,10 +284,10 @@ const Admin = () => {
 
           {message && (
             <div
-              className={`p-3 rounded-lg mb-4 text-center ${
+              className={`p-3 rounded-lg mb-4 text-center transform transition-all duration-300 ${
                 message.includes("✅")
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
+                  ? "bg-green-100 text-green-800 border border-green-200"
+                  : "bg-red-100 text-red-800 border border-red-200"
               }`}
             >
               {message}
@@ -305,13 +305,13 @@ const Admin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleLogin()}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500"
                   placeholder="Enter admin password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -320,7 +320,7 @@ const Admin = () => {
 
             <button
               onClick={handleLogin}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
             >
               Unlock Editor
             </button>
@@ -331,26 +331,27 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Portfolio Editor
           </h1>
           <button
             onClick={() => setIsAuthenticated(false)}
-            className="text-sm text-red-600 hover:text-red-800"
+            className="text-sm text-red-600 hover:text-red-800 transition-colors duration-200 flex items-center justify-center gap-1 mx-auto"
           >
-            🔒 Lock Editor
+            <Lock className="w-3 h-3" />
+            Lock Editor
           </button>
         </div>
 
         {message && (
           <div
-            className={`p-4 rounded-lg mb-6 text-center ${
+            className={`p-4 rounded-lg mb-6 text-center transform transition-all duration-300 ${
               message.includes("✅")
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
+                ? "bg-green-100 text-green-800 border border-green-200"
+                : "bg-red-100 text-red-800 border border-red-200"
             }`}
           >
             {message}
@@ -358,13 +359,13 @@ const Admin = () => {
         )}
 
         {/* Tab Navigation */}
-        <div className="flex mb-6 bg-white rounded-lg p-1 shadow">
+        <div className="flex mb-8 bg-white rounded-xl p-1 shadow-lg border border-gray-100">
           <button
             onClick={() => setActiveTab("hero")}
-            className={`flex-1 py-3 px-4 rounded-md font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
               activeTab === "hero"
-                ? "bg-blue-600 text-white shadow"
-                : "text-gray-600 hover:text-blue-600"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md transform scale-105"
+                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
             }`}
           >
             <User className="w-4 h-4" />
@@ -372,10 +373,10 @@ const Admin = () => {
           </button>
           <button
             onClick={() => setActiveTab("about")}
-            className={`flex-1 py-3 px-4 rounded-md font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
               activeTab === "about"
-                ? "bg-blue-600 text-white shadow"
-                : "text-gray-600 hover:text-blue-600"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md transform scale-105"
+                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
             }`}
           >
             <Code className="w-4 h-4" />
@@ -383,10 +384,10 @@ const Admin = () => {
           </button>
           <button
             onClick={() => setActiveTab("resume")}
-            className={`flex-1 py-3 px-4 rounded-md font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
               activeTab === "resume"
-                ? "bg-blue-600 text-white shadow"
-                : "text-gray-600 hover:text-blue-600"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md transform scale-105"
+                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -396,13 +397,16 @@ const Admin = () => {
 
         {/* Hero Section Editor */}
         {activeTab === "hero" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Hero Section</h2>
+          <div className="space-y-6 animate-fade-in">
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <User className="w-5 h-5 text-blue-600" />
+                Hero Section
+              </h2>
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Your Name
                     </label>
                     <input
@@ -411,11 +415,11 @@ const Admin = () => {
                       onChange={(e) =>
                         handleInputChange("name", e.target.value)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Greeting Text
                     </label>
                     <input
@@ -424,13 +428,13 @@ const Admin = () => {
                       onChange={(e) =>
                         handleInputChange("greeting", e.target.value)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Description
                   </label>
                   <textarea
@@ -439,29 +443,32 @@ const Admin = () => {
                       handleInputChange("description", e.target.value)
                     }
                     rows="3"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 resize-none leading-relaxed"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Roles (comma separated)
                   </label>
                   <input
                     type="text"
                     value={formData.roles}
                     onChange={(e) => handleInputChange("roles", e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Hero Statistics</h2>
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-blue-600" />
+                Hero Statistics
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Years Experience
                   </label>
                   <input
@@ -474,11 +481,11 @@ const Admin = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Projects Completed
                   </label>
                   <input
@@ -491,11 +498,11 @@ const Admin = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Happy Clients
                   </label>
                   <input
@@ -508,17 +515,20 @@ const Admin = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Social Links</h2>
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <Link className="w-5 h-5 text-blue-600" />
+                Social Links
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     GitHub URL
                   </label>
                   <input
@@ -531,11 +541,11 @@ const Admin = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-mono text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     LinkedIn URL
                   </label>
                   <input
@@ -550,11 +560,11 @@ const Admin = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-mono text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address
                   </label>
                   <input
@@ -569,7 +579,7 @@ const Admin = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-mono text-sm"
                   />
                 </div>
               </div>
@@ -579,12 +589,15 @@ const Admin = () => {
 
         {/* About Section Editor */}
         {activeTab === "about" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">About Statistics</h2>
+          <div className="space-y-6 animate-fade-in">
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-blue-600" />
+                About Statistics
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Years Experience
                   </label>
                   <input
@@ -597,11 +610,11 @@ const Admin = () => {
                         parseInt(e.target.value) || 0
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Projects Completed
                   </label>
                   <input
@@ -614,11 +627,11 @@ const Admin = () => {
                         parseInt(e.target.value) || 0
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Happy Clients
                   </label>
                   <input
@@ -631,11 +644,11 @@ const Admin = () => {
                         parseInt(e.target.value) || 0
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Code Commits
                   </label>
                   <input
@@ -648,17 +661,20 @@ const Admin = () => {
                         parseInt(e.target.value) || 0
                       )
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium text-center"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Text Content</h2>
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-blue-600" />
+                Text Content
+              </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Description Paragraph 1
                   </label>
                   <textarea
@@ -667,11 +683,11 @@ const Admin = () => {
                       handleInputChange("description1", e.target.value)
                     }
                     rows="4"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 resize-none leading-relaxed"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Description Paragraph 2
                   </label>
                   <textarea
@@ -680,11 +696,11 @@ const Admin = () => {
                       handleInputChange("description2", e.target.value)
                     }
                     rows="4"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 resize-none leading-relaxed"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Mission Statement
                   </label>
                   <textarea
@@ -693,17 +709,20 @@ const Admin = () => {
                       handleInputChange("mission", e.target.value)
                     }
                     rows="3"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 resize-none leading-relaxed"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Details</h2>
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <Code className="w-5 h-5 text-blue-600" />
+                Details
+              </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Tech Stack (comma separated)
                   </label>
                   <input
@@ -712,12 +731,12 @@ const Admin = () => {
                     onChange={(e) =>
                       handleInputChange("techStack", e.target.value)
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Location
                     </label>
                     <input
@@ -726,11 +745,11 @@ const Admin = () => {
                       onChange={(e) =>
                         handleInputChange("location", e.target.value)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Availability
                     </label>
                     <input
@@ -739,7 +758,7 @@ const Admin = () => {
                       onChange={(e) =>
                         handleInputChange("availability", e.target.value)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                     />
                   </div>
                 </div>
@@ -750,9 +769,12 @@ const Admin = () => {
 
         {/* Resume Section Editor */}
         {activeTab === "resume" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Resume Source</h2>
+          <div className="space-y-6 animate-fade-in">
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-blue-600" />
+                Resume Source
+              </h2>
 
               <div className="space-y-4">
                 <div>
@@ -764,7 +786,7 @@ const Admin = () => {
                     onChange={(e) =>
                       handleInputChange("resumeSource", e.target.value)
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 font-medium"
                   >
                     <option value="server">📁 Upload to Server</option>
                     <option value="external">🔗 External Link</option>
@@ -772,7 +794,7 @@ const Admin = () => {
                 </div>
 
                 {formData.resumeSource === "server" && (
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 transform transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
                       <Server className="w-5 h-5 text-blue-600" />
                       <h3 className="font-semibold text-blue-800">
@@ -790,13 +812,13 @@ const Admin = () => {
                           type="file"
                           accept=".pdf"
                           onChange={handleFileSelect}
-                          className="w-full p-2 border border-dashed border-gray-300 rounded-lg"
+                          className="w-full p-2 border border-dashed border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-300 bg-white text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                         />
                       </div>
 
                       {selectedFile && (
-                        <div className="p-3 bg-green-50 rounded border border-green-200">
-                          <p className="text-sm text-green-700">
+                        <div className="p-3 bg-green-50 rounded-lg border border-green-200 transform transition-all duration-300">
+                          <p className="text-sm text-green-700 font-medium">
                             <strong>Selected:</strong> {selectedFile.name}(
                             {(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                           </p>
@@ -806,7 +828,7 @@ const Admin = () => {
                       <button
                         onClick={handleUploadResume}
                         disabled={!selectedFile || isUploading}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 transition-all duration-300 transform hover:-translate-y-0.5 font-medium"
                       >
                         {isUploading ? (
                           <RefreshCw className="w-4 h-4 animate-spin" />
@@ -820,7 +842,7 @@ const Admin = () => {
                 )}
 
                 {formData.resumeSource === "external" && (
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 transform transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
                       <Link className="w-5 h-5 text-green-600" />
                       <h3 className="font-semibold text-green-800">
@@ -838,7 +860,7 @@ const Admin = () => {
                         onChange={(e) =>
                           handleInputChange("resumeUrl", e.target.value)
                         }
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-mono text-sm"
                         placeholder="https://drive.google.com/..."
                       />
                     </div>
@@ -847,12 +869,15 @@ const Admin = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Resume Details</h2>
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-blue-600" />
+                Resume Details
+              </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Button Text
                   </label>
                   <input
@@ -861,11 +886,11 @@ const Admin = () => {
                     onChange={(e) =>
                       handleInputChange("resumeButtonText", e.target.value)
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     File Name
                   </label>
                   <input
@@ -874,47 +899,47 @@ const Admin = () => {
                     onChange={(e) =>
                       handleInputChange("resumeFileName", e.target.value)
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 font-medium"
                   />
                 </div>
               </div>
 
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200 transform transition-all duration-300">
                 <h3 className="font-semibold text-purple-800 mb-2">
                   Current Resume
                 </h3>
                 <div className="space-y-1 text-sm">
-                  <p>
+                  <p className="text-gray-700">
                     <strong>Source:</strong>{" "}
                     {formData.resumeSource === "server"
                       ? "📁 Server Upload"
                       : "🔗 External Link"}
                   </p>
-                  <p>
+                  <p className="text-gray-700">
                     <strong>URL:</strong>{" "}
-                    <span className="text-blue-600 break-all">
+                    <span className="text-blue-600 break-all font-mono">
                       {formData.resumeUrl}
                     </span>
                   </p>
-                  <p>
+                  <p className="text-gray-700">
                     <strong>File Name:</strong> {formData.resumeFileName}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200 transform transition-all duration-300">
                 <h3 className="font-semibold text-blue-800 mb-2">Preview</h3>
                 <p className="text-sm text-blue-700 mb-3">
                   This is how the download button will appear:
                 </p>
                 <button
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg transform transition-all duration-300 hover:scale-105 font-medium"
                   disabled
                 >
                   <FileText className="w-4 h-4" />
                   {formData.resumeButtonText}
                 </button>
-                <p className="text-xs text-blue-600 mt-2">
+                <p className="text-xs text-blue-600 mt-2 font-medium">
                   File: {formData.resumeFileName}
                 </p>
               </div>
@@ -927,7 +952,7 @@ const Admin = () => {
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 mx-auto"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 mx-auto transform transition-all duration-300 hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
           >
             {isSaving ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -938,6 +963,22 @@ const Admin = () => {
           </button>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
