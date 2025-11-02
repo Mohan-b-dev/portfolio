@@ -1,0 +1,55 @@
+{
+  "footer": {
+    "name": "John Doe",
+    "tagline": "Full-Stack Developer passionate about creating digital experiences that make a difference.",
+    "quickLinks": [
+      {
+        "name": "Home",
+        "href": "#home"
+      },
+      {
+        "name": "About",
+        "href": "#about"
+      },
+      {
+        "name": "Skills",
+        "href": "#skills"
+      },
+      {
+        "name": "Projects",
+        "href": "#projects"
+      },
+      {
+        "name": "Contact",
+        "href": "#contact"
+      }
+    ],
+    "resources": [
+      {
+        "name": "Blog",
+        "href": "#blog"
+      },
+      {
+        "name": "Portfolio",
+        "href": "#projects"
+      },
+      {
+        "name": "Resume",
+        "href": "/resume.pdf"
+      },
+      {
+        "name": "Testimonials",
+        "href": "#testimonials"
+      }
+    ],
+    "socialLinks": {
+      "github": "https://github.com",
+      "linkedin": "https://linkedin.com",
+      "twitter": "https://twitter.com",
+      "email": "mailto:hello@johndoe.dev"
+    },
+    "contactText": "Ready to start your next project?",
+    "copyright": "© {year} John Doe. All rights reserved.",
+    "madeWithText": "Made with ❤️ using Next.js & TypeScript"
+  }
+}

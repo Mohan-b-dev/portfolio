@@ -16,6 +16,22 @@ interface ContactProps {
   darkMode?: boolean;
 }
 
+interface ContactData {
+  contactTitle: string;
+  contactSubtitle: string;
+  contactDescription: string;
+  contactInfo: {
+    email: string;
+    phone: string;
+    location: string;
+  };
+  socialMedia: {
+    github: string;
+    linkedin: string;
+    twitter: string;
+  };
+}
+
 const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -23,10 +39,47 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
     subject: "",
     message: "",
   });
+  const [contactData, setContactData] = useState<ContactData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isVisible, setIsVisible] = useState(false);
+
+  // Load contact data
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        const response = await fetch("/api/contact-data");
+        const data = await response.json();
+        setContactData(data);
+      } catch (error) {
+        console.error("Error loading contact data:", error);
+        // Fallback to default data
+        setContactData({
+          contactTitle: "Get In Touch",
+          contactSubtitle:
+            "Ready to bring your ideas to life? Let's discuss your project and create something amazing together.",
+          contactDescription:
+            "I'm always excited to work on new projects and collaborate with amazing people. Whether you have a specific project in mind or just want to explore possibilities, I'd love to hear from you.",
+          contactInfo: {
+            email: "hello@mohan.dev",
+            phone: "+1 (555) 123-4567",
+            location: "Remote",
+          },
+          socialMedia: {
+            github: "https://github.com",
+            linkedin: "https://linkedin.com/in/mohan",
+            twitter: "https://twitter.com/mohan",
+          },
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchContactData();
+  }, []);
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -121,28 +174,62 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
     {
       icon: Mail,
       label: "Email",
-      value: "hello@johndoe.dev",
-      href: "mailto:hello@johndoe.dev",
+      value: contactData?.contactInfo?.email || "hello@mohan.dev",
+      href: `mailto:${contactData?.contactInfo?.email || "hello@mohan.dev"}`,
     },
     {
       icon: Phone,
       label: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      value: contactData?.contactInfo?.phone || "+1 (555) 123-4567",
+      href: `tel:${contactData?.contactInfo?.phone || "+15551234567"}`,
     },
     {
       icon: MapPin,
       label: "Location",
-      value: "San Francisco, CA",
-      href: "https://maps.google.com/?q=San+Francisco,+CA",
+      value: contactData?.contactInfo?.location || "Remote",
+      href: "https://maps.google.com",
     },
   ];
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+    {
+      icon: Github,
+      href: contactData?.socialMedia?.github || "https://github.com",
+      label: "GitHub",
+    },
+    {
+      icon: Linkedin,
+      href: contactData?.socialMedia?.linkedin || "https://linkedin.com",
+      label: "LinkedIn",
+    },
+    {
+      icon: Twitter,
+      href: contactData?.socialMedia?.twitter || "https://twitter.com",
+      label: "Twitter",
+    },
   ];
+
+  if (isLoading || !contactData) {
+    return (
+      <section
+        id="contact"
+        className={`py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
+          darkMode ? "bg-gray-900" : "bg-gray-50"
+        }`}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p
+              className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+            >
+              Loading contact information...
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -163,9 +250,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
               darkMode ? "text-white" : "text-gray-900"
             }`}
           >
-            Get In{" "}
+            {contactData.contactTitle.split(" ")[0]}{" "}
             <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Touch
+              {contactData.contactTitle.split(" ").slice(1).join(" ")}
             </span>
           </h2>
           <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto rounded-full mb-6 md:mb-8"></div>
@@ -174,8 +261,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
               darkMode ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            Ready to bring your ideas to life? Let&apos;s discuss your project
-            and create something amazing together.
+            {contactData.contactSubtitle}
           </p>
         </div>
 
@@ -199,10 +285,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                   darkMode ? "text-gray-300" : "text-gray-600"
                 }`}
               >
-                I&apos;m always excited to work on new projects and collaborate
-                with amazing people. Whether you have a specific project in mind
-                or just want to explore possibilities, I&apos;d love to hear
-                from you.
+                {contactData.contactDescription}
               </p>
             </div>
 

@@ -134,27 +134,13 @@ const About = ({ darkMode = false }) => {
     }
   }, []);
 
-  // Download resume function
-  const handleDownloadResume = async () => {
+  // Download resume function - Same logic as Header
+  const handleDownloadResume = () => {
     if (!resumeData) return;
 
-    try {
-      // Create a temporary anchor element to trigger download
-      const response = await fetch(resumeData.resumeUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = resumeData.fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading resume:", error);
-      // Fallback to opening in new tab if download fails
-      window.open(resumeData.resumeUrl, "_blank");
-    }
+    // Simple approach - just open the PDF in new tab
+    // This works for both local files and external URLs
+    window.open(resumeData.resumeUrl, "_blank", "noopener,noreferrer");
   };
 
   const stats: Stat[] = useMemo(

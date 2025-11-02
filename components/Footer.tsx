@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Github,
   Linkedin,
@@ -15,29 +15,98 @@ interface FooterProps {
   darkMode?: boolean;
 }
 
+interface FooterData {
+  footer: {
+    name: string;
+    tagline: string;
+    quickLinks: Array<{ name: string; href: string }>;
+    resources: Array<{ name: string; href: string }>;
+    socialLinks: {
+      github: string;
+      linkedin: string;
+      twitter: string;
+      email: string;
+    };
+    contactText: string;
+    copyright: string;
+    madeWithText: string;
+  };
+}
+
 const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
   const [showScrollTop, setShowScrollTop] = useState(true);
+  const [footerData, setFooterData] = useState<FooterData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load footer data
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      try {
+        const response = await fetch("/api/footer-data");
+        const data = await response.json();
+        setFooterData(data);
+      } catch (error) {
+        console.error("Error loading footer data:", error);
+        // Fallback to default data
+        setFooterData({
+          footer: {
+            name: "John Doe",
+            tagline:
+              "Full-Stack Developer passionate about creating digital experiences that make a difference.",
+            quickLinks: [
+              { name: "Home", href: "#home" },
+              { name: "About", href: "#about" },
+              { name: "Skills", href: "#skills" },
+              { name: "Projects", href: "#projects" },
+              { name: "Contact", href: "#contact" },
+            ],
+            resources: [
+              { name: "Blog", href: "#blog" },
+              { name: "Portfolio", href: "#projects" },
+              { name: "Resume", href: "/resume.pdf" },
+              { name: "Testimonials", href: "#testimonials" },
+            ],
+            socialLinks: {
+              github: "https://github.com",
+              linkedin: "https://linkedin.com",
+              twitter: "https://twitter.com",
+              email: "mailto:hello@johndoe.dev",
+            },
+            contactText: "Ready to start your next project?",
+            copyright: "© {year} John Doe. All rights reserved.",
+            madeWithText: "Made with ❤️ using Next.js & TypeScript",
+          },
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFooterData();
+  }, []);
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-    { icon: Mail, href: "mailto:hello@johndoe.dev", label: "Email" },
-  ];
-
-  const quickLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
-  ];
-
-  const resources = [
-    { name: "Blog", href: "#blog" },
-    { name: "Portfolio", href: "#projects" },
-    { name: "Resume", href: "/resume.pdf" },
-    { name: "Testimonials", href: "#testimonials" },
+    {
+      icon: Github,
+      href: footerData?.footer?.socialLinks?.github || "https://github.com",
+      label: "GitHub",
+    },
+    {
+      icon: Linkedin,
+      href: footerData?.footer?.socialLinks?.linkedin || "https://linkedin.com",
+      label: "LinkedIn",
+    },
+    {
+      icon: Twitter,
+      href: footerData?.footer?.socialLinks?.twitter || "https://twitter.com",
+      label: "Twitter",
+    },
+    {
+      icon: Mail,
+      href:
+        footerData?.footer?.socialLinks?.email || "mailto:hello@johndoe.dev",
+      label: "Email",
+    },
   ];
 
   const scrollToSection = (href: string) => {
@@ -55,6 +124,32 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
   };
 
   const currentYear = new Date().getFullYear();
+  const copyrightText =
+    footerData?.footer?.copyright?.replace("{year}", currentYear.toString()) ||
+    `© ${currentYear} John Doe. All rights reserved.`;
+
+  if (isLoading || !footerData) {
+    return (
+      <footer
+        className={`relative w-full py-12 md:py-16 transition-colors duration-300 ${
+          darkMode
+            ? "bg-gradient-to-b from-gray-900 to-black"
+            : "bg-gradient-to-b from-gray-50 to-white"
+        }`}
+      >
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+            <p
+              className={`mt-2 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+            >
+              Loading footer...
+            </p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer
@@ -72,7 +167,7 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
             <div className="flex items-center space-x-2">
               <Code className="w-8 h-8 text-purple-600" />
               <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                John Doe
+                {footerData.footer.name}
               </div>
             </div>
             <p
@@ -80,8 +175,7 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              Full-Stack Developer passionate about creating digital experiences
-              that make a difference.
+              {footerData.footer.tagline}
             </p>
             {/* Social Links */}
             <div className="flex space-x-3">
@@ -115,7 +209,7 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
               Quick Links
             </h3>
             <ul className="space-y-2.5 md:space-y-3">
-              {quickLinks.map((link) => (
+              {footerData.footer.quickLinks.map((link) => (
                 <li key={link.name}>
                   <button
                     onClick={() => scrollToSection(link.href)}
@@ -144,7 +238,7 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
               Resources
             </h3>
             <ul className="space-y-2.5 md:space-y-3">
-              {resources.map((link) => (
+              {footerData.footer.resources.map((link) => (
                 <li key={link.name}>
                   <button
                     onClick={() => scrollToSection(link.href)}
@@ -178,10 +272,10 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
                   darkMode ? "text-gray-300" : "text-gray-600"
                 }`}
               >
-                Ready to start your next project?
+                {footerData.footer.contactText}
               </p>
               <a
-                href="mailto:hello@johndoe.dev"
+                href={footerData.footer.socialLinks.email}
                 className={`inline-block px-5 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl 
                   text-sm md:text-base font-medium transition-all duration-300 
                   transform hover:scale-105 ${
@@ -212,7 +306,7 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
                 darkMode ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              © {currentYear} John Doe. All rights reserved.
+              {copyrightText}
             </p>
 
             {/* Made with Love */}
@@ -221,12 +315,16 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
                 darkMode ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              <span>Made with</span>
+              <span>{footerData.footer.madeWithText.replace("❤️", "")}</span>
               <Heart className="w-3.5 h-3.5 md:w-4 md:h-4 text-red-500 animate-pulse" />
-              <span>using Next.js & TypeScript</span>
+              <span>
+                {footerData.footer.madeWithText.includes("❤️")
+                  ? footerData.footer.madeWithText.split("❤️")[1]
+                  : ""}
+              </span>
             </div>
 
-            {/* Privacy Links - Optional */}
+            {/* Privacy Links */}
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => scrollToSection("#privacy")}

@@ -23,110 +23,186 @@ interface Skill {
 }
 
 interface SkillCategory {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: string;
   title: string;
   skills: Skill[];
   color: string;
 }
 
+interface SoftSkill {
+  name: string;
+  level: number;
+  icon: string;
+}
+
+interface Certification {
+  name: string;
+  issuer: string;
+  year: string;
+}
+
+interface SkillsData {
+  skillCategories: SkillCategory[];
+  softSkills: SoftSkill[];
+  certifications: Certification[];
+  technologies: string[];
+  sectionTitle: string;
+  sectionDescription: string;
+  technologiesTitle: string;
+}
+
 const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("technical");
+  const [skillsData, setSkillsData] = useState<SkillsData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const skillCategories: SkillCategory[] = [
-    {
-      icon: Code2,
-      title: "Frontend Development",
-      skills: [
-        { name: "React/Next.js", level: 95 },
-        { name: "TypeScript", level: 90 },
-        { name: "Tailwind CSS", level: 88 },
-        { name: "Vue.js", level: 82 },
-      ],
-      color: "from-blue-500 to-purple-600",
-    },
-    {
-      icon: Database,
-      title: "Backend Development",
-      skills: [
-        { name: "Node.js", level: 92 },
-        { name: "Python", level: 85 },
-        { name: "PostgreSQL", level: 88 },
-        { name: "MongoDB", level: 80 },
-      ],
-      color: "from-emerald-500 to-teal-600",
-    },
-    {
-      icon: Cloud,
-      title: "DevOps & Cloud",
-      skills: [
-        { name: "AWS", level: 85 },
-        { name: "Docker", level: 82 },
-        { name: "Kubernetes", level: 75 },
-        { name: "CI/CD", level: 88 },
-      ],
-      color: "from-orange-500 to-red-600",
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile Development",
-      skills: [
-        { name: "React Native", level: 88 },
-        { name: "Flutter", level: 75 },
-        { name: "iOS/Swift", level: 70 },
-        { name: "Android/Kotlin", level: 72 },
-      ],
-      color: "from-pink-500 to-rose-600",
-    },
-    {
-      icon: Palette,
-      title: "Design & UX",
-      skills: [
-        { name: "Figma", level: 85 },
-        { name: "Adobe XD", level: 80 },
-        { name: "UI/UX Design", level: 88 },
-        { name: "Prototyping", level: 82 },
-      ],
-      color: "from-violet-500 to-purple-600",
-    },
-    {
-      icon: Globe,
-      title: "Other Skills",
-      skills: [
-        { name: "GraphQL", level: 85 },
-        { name: "REST APIs", level: 92 },
-        { name: "Git/GitHub", level: 90 },
-        { name: "Agile/Scrum", level: 88 },
-      ],
-      color: "from-cyan-500 to-blue-600",
-    },
-  ];
+  // Icon mapping
+  const iconMap = {
+    Code2,
+    Database,
+    Globe,
+    Smartphone,
+    Cloud,
+    Palette,
+    Award,
+    TrendingUp,
+    Zap,
+  };
 
-  const softSkills = [
-    { name: "Problem Solving", level: 95, icon: Zap },
-    { name: "Team Leadership", level: 88, icon: Award },
-    { name: "Communication", level: 92, icon: Globe },
-    { name: "Adaptability", level: 90, icon: TrendingUp },
-  ];
+  // Fetch skills data
+  useEffect(() => {
+    const fetchSkillsData = async () => {
+      try {
+        const response = await fetch("/api/skills-data");
+        const data = await response.json();
+        setSkillsData(data);
+      } catch (error) {
+        console.error("Error loading skills data:", error);
+        // Fallback to default data
+        setSkillsData({
+          skillCategories: [
+            {
+              icon: "Code2",
+              title: "Frontend Development",
+              skills: [
+                { name: "React/Next.js", level: 95 },
+                { name: "TypeScript", level: 90 },
+                { name: "Tailwind CSS", level: 88 },
+                { name: "Vue.js", level: 82 },
+              ],
+              color: "from-blue-500 to-purple-600",
+            },
+            {
+              icon: "Database",
+              title: "Backend Development",
+              skills: [
+                { name: "Node.js", level: 92 },
+                { name: "Python", level: 85 },
+                { name: "PostgreSQL", level: 88 },
+                { name: "MongoDB", level: 80 },
+              ],
+              color: "from-emerald-500 to-teal-600",
+            },
+            {
+              icon: "Cloud",
+              title: "DevOps & Cloud",
+              skills: [
+                { name: "AWS", level: 85 },
+                { name: "Docker", level: 82 },
+                { name: "Kubernetes", level: 75 },
+                { name: "CI/CD", level: 88 },
+              ],
+              color: "from-orange-500 to-red-600",
+            },
+            {
+              icon: "Smartphone",
+              title: "Mobile Development",
+              skills: [
+                { name: "React Native", level: 88 },
+                { name: "Flutter", level: 75 },
+                { name: "iOS/Swift", level: 70 },
+                { name: "Android/Kotlin", level: 72 },
+              ],
+              color: "from-pink-500 to-rose-600",
+            },
+            {
+              icon: "Palette",
+              title: "Design & UX",
+              skills: [
+                { name: "Figma", level: 85 },
+                { name: "Adobe XD", level: 80 },
+                { name: "UI/UX Design", level: 88 },
+                { name: "Prototyping", level: 82 },
+              ],
+              color: "from-violet-500 to-purple-600",
+            },
+            {
+              icon: "Globe",
+              title: "Other Skills",
+              skills: [
+                { name: "GraphQL", level: 85 },
+                { name: "REST APIs", level: 92 },
+                { name: "Git/GitHub", level: 90 },
+                { name: "Agile/Scrum", level: 88 },
+              ],
+              color: "from-cyan-500 to-blue-600",
+            },
+          ],
+          softSkills: [
+            { name: "Problem Solving", level: 95, icon: "Zap" },
+            { name: "Team Leadership", level: 88, icon: "Award" },
+            { name: "Communication", level: 92, icon: "Globe" },
+            { name: "Adaptability", level: 90, icon: "TrendingUp" },
+          ],
+          certifications: [
+            {
+              name: "AWS Certified Solutions Architect",
+              issuer: "Amazon Web Services",
+              year: "2024",
+            },
+            {
+              name: "Professional Scrum Master I",
+              issuer: "Scrum.org",
+              year: "2023",
+            },
+            {
+              name: "Google Cloud Professional",
+              issuer: "Google Cloud",
+              year: "2023",
+            },
+          ],
+          technologies: [
+            "React",
+            "TypeScript",
+            "Node.js",
+            "Python",
+            "AWS",
+            "Docker",
+            "PostgreSQL",
+            "MongoDB",
+            "GraphQL",
+            "Redis",
+            "Kubernetes",
+            "Git",
+            "Next.js",
+            "Vue.js",
+            "Tailwind CSS",
+            "Express",
+          ],
+          sectionTitle: "My Skills",
+          sectionDescription:
+            "A comprehensive overview of my technical expertise and professional capabilities",
+          technologiesTitle: "Technologies I Work With",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const certifications = [
-    {
-      name: "AWS Certified Solutions Architect",
-      issuer: "Amazon Web Services",
-      year: "2024",
-    },
-    {
-      name: "Professional Scrum Master I",
-      issuer: "Scrum.org",
-      year: "2023",
-    },
-    {
-      name: "Google Cloud Professional",
-      issuer: "Google Cloud",
-      year: "2023",
-    },
-  ];
+    fetchSkillsData();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -145,24 +221,28 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
     return () => observer.disconnect();
   }, []);
 
-  const technologies = [
-    "React",
-    "TypeScript",
-    "Node.js",
-    "Python",
-    "AWS",
-    "Docker",
-    "PostgreSQL",
-    "MongoDB",
-    "GraphQL",
-    "Redis",
-    "Kubernetes",
-    "Git",
-    "Next.js",
-    "Vue.js",
-    "Tailwind CSS",
-    "Express",
-  ];
+  if (isLoading || !skillsData) {
+    return (
+      <section
+        ref={sectionRef}
+        id="skills"
+        className={`relative py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
+          darkMode ? "bg-gray-900" : "bg-gray-50"
+        }`}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p
+              className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+            >
+              Loading skills data...
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -184,9 +264,9 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
               darkMode ? "text-white" : "text-gray-900"
             }`}
           >
-            My{" "}
+            {skillsData.sectionTitle.split(" ")[0]}{" "}
             <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Skills
+              {skillsData.sectionTitle.split(" ")[1]}
             </span>
           </h2>
           <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto rounded-full mb-6 md:mb-8"></div>
@@ -195,8 +275,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
               darkMode ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            A comprehensive overview of my technical expertise and professional
-            capabilities
+            {skillsData.sectionDescription}
           </p>
         </div>
 
@@ -242,74 +321,81 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
         {/* Technical Skills */}
         {activeTab === "technical" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto mb-12 md:mb-16">
-            {skillCategories.map((category, categoryIndex) => (
-              <div
-                key={category.title}
-                className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm transform hover:scale-105 transition-all duration-500 ${
-                  darkMode
-                    ? "bg-gray-800/50 hover:bg-gray-700/50"
-                    : "bg-white/80 hover:bg-white/90"
-                } shadow-xl hover:shadow-2xl ${
-                  isVisible ? "animate-fadeInUp" : "opacity-0"
-                }`}
-                style={{
-                  animationDelay: `${0.3 + categoryIndex * 0.1}s`,
-                }}
-              >
-                <div className="text-center mb-6 md:mb-8">
-                  <div
-                    className={`inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-r ${category.color} mb-3 md:mb-4 transform hover:rotate-12 transition-transform duration-300 shadow-lg`}
-                  >
-                    <category.icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
-                  </div>
-                  <h3
-                    className={`text-lg md:text-xl font-bold ${
-                      darkMode ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    {category.title}
-                  </h3>
-                </div>
-
-                <div className="space-y-4 md:space-y-6">
-                  {category.skills.map((skill, skillIndex) => (
-                    <div key={skill.name} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm md:text-base font-medium ${
-                            darkMode ? "text-gray-300" : "text-gray-700"
-                          }`}
-                        >
-                          {skill.name}
-                        </span>
-                        <span
-                          className={`text-xs md:text-sm font-semibold ${
-                            darkMode ? "text-gray-400" : "text-gray-600"
-                          }`}
-                        >
-                          {skill.level}%
-                        </span>
-                      </div>
-                      <div
-                        className={`w-full h-2 md:h-2.5 rounded-full overflow-hidden ${
-                          darkMode ? "bg-gray-700" : "bg-gray-200"
-                        }`}
-                      >
-                        <div
-                          className={`h-full rounded-full bg-gradient-to-r ${category.color} transition-all duration-1000 ease-out`}
-                          style={{
-                            width: isVisible ? `${skill.level}%` : "0%",
-                            transitionDelay: `${
-                              0.3 + categoryIndex * 0.1 + skillIndex * 0.1 + 0.5
-                            }s`,
-                          }}
-                        />
-                      </div>
+            {skillsData.skillCategories.map((category, categoryIndex) => {
+              const IconComponent =
+                iconMap[category.icon as keyof typeof iconMap] || Code2;
+              return (
+                <div
+                  key={category.title}
+                  className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm transform hover:scale-105 transition-all duration-500 ${
+                    darkMode
+                      ? "bg-gray-800/50 hover:bg-gray-700/50"
+                      : "bg-white/80 hover:bg-white/90"
+                  } shadow-xl hover:shadow-2xl ${
+                    isVisible ? "animate-fadeInUp" : "opacity-0"
+                  }`}
+                  style={{
+                    animationDelay: `${0.3 + categoryIndex * 0.1}s`,
+                  }}
+                >
+                  <div className="text-center mb-6 md:mb-8">
+                    <div
+                      className={`inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-r ${category.color} mb-3 md:mb-4 transform hover:rotate-12 transition-transform duration-300 shadow-lg`}
+                    >
+                      <IconComponent className="w-7 h-7 md:w-8 md:h-8 text-white" />
                     </div>
-                  ))}
+                    <h3
+                      className={`text-lg md:text-xl font-bold ${
+                        darkMode ? "text-white" : "text-gray-900"
+                      }`}
+                    >
+                      {category.title}
+                    </h3>
+                  </div>
+
+                  <div className="space-y-4 md:space-y-6">
+                    {category.skills.map((skill, skillIndex) => (
+                      <div key={skill.name} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span
+                            className={`text-sm md:text-base font-medium ${
+                              darkMode ? "text-gray-300" : "text-gray-700"
+                            }`}
+                          >
+                            {skill.name}
+                          </span>
+                          <span
+                            className={`text-xs md:text-sm font-semibold ${
+                              darkMode ? "text-gray-400" : "text-gray-600"
+                            }`}
+                          >
+                            {skill.level}%
+                          </span>
+                        </div>
+                        <div
+                          className={`w-full h-2 md:h-2.5 rounded-full overflow-hidden ${
+                            darkMode ? "bg-gray-700" : "bg-gray-200"
+                          }`}
+                        >
+                          <div
+                            className={`h-full rounded-full bg-gradient-to-r ${category.color} transition-all duration-1000 ease-out`}
+                            style={{
+                              width: isVisible ? `${skill.level}%` : "0%",
+                              transitionDelay: `${
+                                0.3 +
+                                categoryIndex * 0.1 +
+                                skillIndex * 0.1 +
+                                0.5
+                              }s`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -317,61 +403,65 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
         {activeTab === "soft" && (
           <div className="max-w-4xl mx-auto mb-12 md:mb-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-              {softSkills.map((skill, index) => (
-                <div
-                  key={skill.name}
-                  className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm ${
-                    darkMode ? "bg-gray-800/50" : "bg-white/80"
-                  } shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 ${
-                    isVisible ? "animate-fadeInUp" : "opacity-0"
-                  }`}
-                  style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-                >
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div className="p-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600">
-                      <skill.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3
-                      className={`text-lg md:text-xl font-bold ${
-                        darkMode ? "text-white" : "text-gray-900"
-                      }`}
-                    >
-                      {skill.name}
-                    </h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span
-                        className={`text-sm ${
-                          darkMode ? "text-gray-400" : "text-gray-600"
+              {skillsData.softSkills.map((skill, index) => {
+                const IconComponent =
+                  iconMap[skill.icon as keyof typeof iconMap] || Award;
+                return (
+                  <div
+                    key={skill.name}
+                    className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm ${
+                      darkMode ? "bg-gray-800/50" : "bg-white/80"
+                    } shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 ${
+                      isVisible ? "animate-fadeInUp" : "opacity-0"
+                    }`}
+                    style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+                  >
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div className="p-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600">
+                        <IconComponent className="w-6 h-6 text-white" />
+                      </div>
+                      <h3
+                        className={`text-lg md:text-xl font-bold ${
+                          darkMode ? "text-white" : "text-gray-900"
                         }`}
                       >
-                        Proficiency
-                      </span>
-                      <span
-                        className={`text-sm font-semibold ${
-                          darkMode ? "text-gray-300" : "text-gray-700"
-                        }`}
-                      >
-                        {skill.level}%
-                      </span>
+                        {skill.name}
+                      </h3>
                     </div>
-                    <div
-                      className={`w-full h-3 rounded-full ${
-                        darkMode ? "bg-gray-700" : "bg-gray-200"
-                      }`}
-                    >
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span
+                          className={`text-sm ${
+                            darkMode ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
+                          Proficiency
+                        </span>
+                        <span
+                          className={`text-sm font-semibold ${
+                            darkMode ? "text-gray-300" : "text-gray-700"
+                          }`}
+                        >
+                          {skill.level}%
+                        </span>
+                      </div>
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-purple-600 to-blue-600 transition-all duration-1000"
-                        style={{
-                          width: isVisible ? `${skill.level}%` : "0%",
-                          transitionDelay: `${0.3 + index * 0.1 + 0.5}s`,
-                        }}
-                      />
+                        className={`w-full h-3 rounded-full ${
+                          darkMode ? "bg-gray-700" : "bg-gray-200"
+                        }`}
+                      >
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-purple-600 to-blue-600 transition-all duration-1000"
+                          style={{
+                            width: isVisible ? `${skill.level}%` : "0%",
+                            transitionDelay: `${0.3 + index * 0.1 + 0.5}s`,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Certifications */}
@@ -384,7 +474,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                 Certifications
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {certifications.map((cert, index) => (
+                {skillsData.certifications.map((cert, index) => (
                   <div
                     key={cert.name}
                     className={`p-6 rounded-2xl backdrop-blur-sm ${
@@ -434,10 +524,10 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
               darkMode ? "text-white" : "text-gray-900"
             }`}
           >
-            Technologies I Work With
+            {skillsData.technologiesTitle}
           </h3>
           <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-5xl mx-auto">
-            {technologies.map((tech, index) => (
+            {skillsData.technologies.map((tech, index) => (
               <span
                 key={tech}
                 className={`px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl text-sm md:text-base font-medium transform hover:scale-110 transition-all duration-300 cursor-default ${

@@ -8,6 +8,12 @@ interface HeaderProps {
   toggleDarkMode?: () => void;
 }
 
+interface ResumeData {
+  resumeUrl: string;
+  buttonText: string;
+  fileName: string;
+}
+
 const Header: React.FC<HeaderProps> = ({
   darkMode = false,
   toggleDarkMode,
@@ -15,12 +21,37 @@ const Header: React.FC<HeaderProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load resume data
+  useEffect(() => {
+    const fetchResumeData = async () => {
+      try {
+        const response = await fetch("/api/resume-data");
+        if (!response.ok) throw new Error("Failed to fetch resume data");
+        const data = await response.json();
+        setResumeData(data);
+      } catch (error) {
+        console.error("Error loading resume data:", error);
+        // Use default fallback data
+        setResumeData({
+          resumeUrl: "/resume.pdf",
+          buttonText: "Resume",
+          fileName: "Mohan_Resume.pdf",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchResumeData();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      // Update active section based on scroll position
       const sections = ["home", "about", "skills", "projects", "contact"];
       const scrollPosition = window.scrollY + 100;
 
@@ -82,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Header height offset
+      const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -95,7 +126,11 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleDownloadResume = () => {
-    window.open("/resume.pdf", "_blank");
+    if (!resumeData) return;
+
+    // Simple approach - just open the PDF in new tab
+    // This works for both local files and external URLs
+    window.open(resumeData.resumeUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -155,15 +190,24 @@ const Header: React.FC<HeaderProps> = ({
             <div className="hidden lg:flex items-center space-x-3">
               <button
                 onClick={handleDownloadResume}
+                disabled={isLoading}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 
-                  hover:scale-105 flex items-center space-x-2 ${
+                  hover:scale-105 flex items-center space-x-2 disabled:opacity-50 ${
                     darkMode
-                      ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg hover:shadow-purple-500/25"
+                      : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/30"
                   }`}
               >
-                <Download className="w-4 h-4" />
-                <span>Resume</span>
+                {isLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                <span>
+                  {isLoading
+                    ? "Loading..."
+                    : resumeData?.buttonText || "Resume"}
+                </span>
               </button>
               <button
                 onClick={toggleDarkMode}
@@ -250,16 +294,25 @@ const Header: React.FC<HeaderProps> = ({
               ))}
               <button
                 onClick={handleDownloadResume}
+                disabled={isLoading}
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium
-                  transition-all duration-300 hover:scale-105 mt-2 ${
+                  transition-all duration-300 hover:scale-105 mt-2 disabled:opacity-50 ${
                     darkMode
-                      ? "text-purple-400 hover:text-purple-300 hover:bg-gray-800/50"
-                      : "text-purple-600 hover:text-purple-700 hover:bg-gray-100/50"
+                      ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                      : "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
                   }`}
               >
                 <div className="flex items-center space-x-2">
-                  <Download className="w-4 h-4" />
-                  <span>Download Resume</span>
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                  ) : (
+                    <Download className="w-4 h-4" />
+                  )}
+                  <span>
+                    {isLoading
+                      ? "Loading..."
+                      : `Download ${resumeData?.buttonText || "Resume"}`}
+                  </span>
                 </div>
               </button>
             </div>

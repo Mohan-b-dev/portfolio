@@ -1,0 +1,15 @@
+{
+  "contactTitle": "Get In Touch",
+  "contactSubtitle": "Ready to bring your ideas to life? Let's discuss your project and create something amazing together.",
+  "contactDescription": "I'm always excited to work on new projects and collaborate with amazing people. Whether you have a specific project in mind or just want to explore possibilities, I'd love to hear from you.",
+  "contactInfo": {
+    "email": "hello@mohan.dev",
+    "phone": "+1 (555) 123-4567",
+    "location": "Remote"
+  },
+  "socialMedia": {
+    "github": "https://github.com",
+    "linkedin": "https://linkedin.com/in/mohan",
+    "twitter": "https://twitter.com/mohan"
+  }
+}
