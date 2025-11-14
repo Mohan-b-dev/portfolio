@@ -227,14 +227,16 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
         ref={sectionRef}
         id="skills"
         className={`relative py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
-          darkMode ? "bg-gray-900" : "bg-gray-50"
+          darkMode ? "bg-gray-900" : "bg-white"
         }`}
+        suppressHydrationWarning
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
             <p
               className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+              suppressHydrationWarning
             >
               Loading skills data...
             </p>
@@ -249,8 +251,9 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
       ref={sectionRef}
       id="skills"
       className={`relative py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
-        darkMode ? "bg-gray-900" : "bg-gray-50"
+        darkMode ? "bg-gray-900" : "bg-white"
       }`}
+      suppressHydrationWarning
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -259,17 +262,30 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
             isVisible ? "animate-fadeInUp" : "opacity-0"
           }`}
         >
-          <h2
-            className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 ${
-              darkMode ? "text-white" : "text-gray-900"
-            }`}
-          >
-            {skillsData.sectionTitle.split(" ")[0]}{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              {skillsData.sectionTitle.split(" ")[1]}
-            </span>
-          </h2>
-          <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto rounded-full mb-6 md:mb-8"></div>
+          {(() => {
+            const title = skillsData.sectionTitle || "My Skills";
+            const parts = title.split(" ");
+            const first = parts[0] || title;
+            const rest = parts.length > 1 ? parts.slice(1).join(" ") : "";
+            return (
+              <h2
+                className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 ${
+                  darkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {first}
+                {rest && (
+                  <>
+                    {" "}
+                    <span className="bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                      {rest}
+                    </span>
+                  </>
+                )}
+              </h2>
+            );
+          })()}
+          <div className="w-16 sm:w-20 h-1 bg-linear-to-r from-purple-600 to-blue-600 mx-auto rounded-full mb-6 md:mb-8"></div>
           <p
             className={`text-base md:text-xl max-w-3xl mx-auto px-4 ${
               darkMode ? "text-gray-300" : "text-gray-600"
@@ -288,14 +304,14 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
         >
           <div
             className={`inline-flex rounded-xl md:rounded-2xl p-1 ${
-              darkMode ? "bg-gray-800" : "bg-white"
+              darkMode ? "bg-gray-800/80" : "bg-gray-50"
             } shadow-lg`}
           >
             <button
               onClick={() => setActiveTab("technical")}
               className={`px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-medium transition-all duration-300 text-sm md:text-base ${
                 activeTab === "technical"
-                  ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                  ? "bg-linear-to-r from-purple-600 to-blue-600 text-white"
                   : darkMode
                   ? "text-gray-400 hover:text-white"
                   : "text-gray-600 hover:text-gray-900"
@@ -307,7 +323,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
               onClick={() => setActiveTab("soft")}
               className={`px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-medium transition-all duration-300 text-sm md:text-base ${
                 activeTab === "soft"
-                  ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                  ? "bg-linear-to-r from-purple-600 to-blue-600 text-white"
                   : darkMode
                   ? "text-gray-400 hover:text-white"
                   : "text-gray-600 hover:text-gray-900"
@@ -321,81 +337,83 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
         {/* Technical Skills */}
         {activeTab === "technical" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto mb-12 md:mb-16">
-            {skillsData.skillCategories.map((category, categoryIndex) => {
-              const IconComponent =
-                iconMap[category.icon as keyof typeof iconMap] || Code2;
-              return (
-                <div
-                  key={category.title}
-                  className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm transform hover:scale-105 transition-all duration-500 ${
-                    darkMode
-                      ? "bg-gray-800/50 hover:bg-gray-700/50"
-                      : "bg-white/80 hover:bg-white/90"
-                  } shadow-xl hover:shadow-2xl ${
-                    isVisible ? "animate-fadeInUp" : "opacity-0"
-                  }`}
-                  style={{
-                    animationDelay: `${0.3 + categoryIndex * 0.1}s`,
-                  }}
-                >
-                  <div className="text-center mb-6 md:mb-8">
-                    <div
-                      className={`inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-r ${category.color} mb-3 md:mb-4 transform hover:rotate-12 transition-transform duration-300 shadow-lg`}
-                    >
-                      <IconComponent className="w-7 h-7 md:w-8 md:h-8 text-white" />
-                    </div>
-                    <h3
-                      className={`text-lg md:text-xl font-bold ${
-                        darkMode ? "text-white" : "text-gray-900"
-                      }`}
-                    >
-                      {category.title}
-                    </h3>
-                  </div>
-
-                  <div className="space-y-4 md:space-y-6">
-                    {category.skills.map((skill, skillIndex) => (
-                      <div key={skill.name} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span
-                            className={`text-sm md:text-base font-medium ${
-                              darkMode ? "text-gray-300" : "text-gray-700"
-                            }`}
-                          >
-                            {skill.name}
-                          </span>
-                          <span
-                            className={`text-xs md:text-sm font-semibold ${
-                              darkMode ? "text-gray-400" : "text-gray-600"
-                            }`}
-                          >
-                            {skill.level}%
-                          </span>
-                        </div>
-                        <div
-                          className={`w-full h-2 md:h-2.5 rounded-full overflow-hidden ${
-                            darkMode ? "bg-gray-700" : "bg-gray-200"
-                          }`}
-                        >
-                          <div
-                            className={`h-full rounded-full bg-gradient-to-r ${category.color} transition-all duration-1000 ease-out`}
-                            style={{
-                              width: isVisible ? `${skill.level}%` : "0%",
-                              transitionDelay: `${
-                                0.3 +
-                                categoryIndex * 0.1 +
-                                skillIndex * 0.1 +
-                                0.5
-                              }s`,
-                            }}
-                          />
-                        </div>
+            {(skillsData.skillCategories || []).map(
+              (category, categoryIndex) => {
+                const IconComponent =
+                  iconMap[category.icon as keyof typeof iconMap] || Code2;
+                return (
+                  <div
+                    key={category.title}
+                    className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm transform hover:scale-105 transition-all duration-500 ${
+                      darkMode
+                        ? "bg-gray-800/50 hover:bg-gray-700/50"
+                        : "bg-white/80 hover:bg-white/90"
+                    } shadow-xl hover:shadow-2xl ${
+                      isVisible ? "animate-fadeInUp" : "opacity-0"
+                    }`}
+                    style={{
+                      animationDelay: `${0.3 + categoryIndex * 0.1}s`,
+                    }}
+                  >
+                    <div className="text-center mb-6 md:mb-8">
+                      <div
+                        className={`inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-linear-to-r ${category.color} mb-3 md:mb-4 transform hover:rotate-12 transition-transform duration-300 shadow-lg`}
+                      >
+                        <IconComponent className="w-7 h-7 md:w-8 md:h-8 text-white" />
                       </div>
-                    ))}
+                      <h3
+                        className={`text-lg md:text-xl font-bold ${
+                          darkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        {category.title}
+                      </h3>
+                    </div>
+
+                    <div className="space-y-4 md:space-y-6">
+                      {(category.skills || []).map((skill, skillIndex) => (
+                        <div key={skill.name} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span
+                              className={`text-sm md:text-base font-medium ${
+                                darkMode ? "text-gray-300" : "text-gray-600"
+                              }`}
+                            >
+                              {skill.name}
+                            </span>
+                            <span
+                              className={`text-xs md:text-sm font-semibold ${
+                                darkMode ? "text-gray-400" : "text-gray-600"
+                              }`}
+                            >
+                              {skill.level}%
+                            </span>
+                          </div>
+                          <div
+                            className={`w-full h-2 md:h-2.5 rounded-full overflow-hidden ${
+                              darkMode ? "bg-gray-700" : "bg-gray-200"
+                            }`}
+                          >
+                            <div
+                              className={`h-full rounded-full bg-linear-to-r ${category.color} transition-all duration-1000 ease-out`}
+                              style={{
+                                width: isVisible ? `${skill.level}%` : "0%",
+                                transitionDelay: `${
+                                  0.3 +
+                                  categoryIndex * 0.1 +
+                                  skillIndex * 0.1 +
+                                  0.5
+                                }s`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              }
+            )}
           </div>
         )}
 
@@ -403,7 +421,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
         {activeTab === "soft" && (
           <div className="max-w-4xl mx-auto mb-12 md:mb-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-              {skillsData.softSkills.map((skill, index) => {
+              {(skillsData.softSkills || []).map((skill, index) => {
                 const IconComponent =
                   iconMap[skill.icon as keyof typeof iconMap] || Award;
                 return (
@@ -417,7 +435,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                     style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                   >
                     <div className="flex items-center space-x-4 mb-6">
-                      <div className="p-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600">
+                      <div className="p-3 rounded-xl bg-linear-to-r from-purple-600 to-blue-600">
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
                       <h3
@@ -439,7 +457,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                         </span>
                         <span
                           className={`text-sm font-semibold ${
-                            darkMode ? "text-gray-300" : "text-gray-700"
+                            darkMode ? "text-gray-300" : "text-gray-600"
                           }`}
                         >
                           {skill.level}%
@@ -451,7 +469,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                         }`}
                       >
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-purple-600 to-blue-600 transition-all duration-1000"
+                          className="h-full rounded-full bg-linear-to-r from-purple-600 to-blue-600 transition-all duration-1000"
                           style={{
                             width: isVisible ? `${skill.level}%` : "0%",
                             transitionDelay: `${0.3 + index * 0.1 + 0.5}s`,
@@ -474,7 +492,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                 Certifications
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {skillsData.certifications.map((cert, index) => (
+                {(skillsData.certifications || []).map((cert, index) => (
                   <div
                     key={cert.name}
                     className={`p-6 rounded-2xl backdrop-blur-sm ${
@@ -485,7 +503,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                     style={{ animationDelay: `${0.5 + index * 0.1}s` }}
                   >
                     <div className="flex items-start space-x-3 mb-3">
-                      <Award className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                      <Award className="w-6 h-6 text-purple-600 shrink-0 mt-1" />
                       <div>
                         <h4
                           className={`font-bold mb-1 ${
@@ -527,13 +545,13 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
             {skillsData.technologiesTitle}
           </h3>
           <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-5xl mx-auto">
-            {skillsData.technologies.map((tech, index) => (
+            {(skillsData.technologies || []).map((tech, index) => (
               <span
                 key={tech}
                 className={`px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl text-sm md:text-base font-medium transform hover:scale-110 transition-all duration-300 cursor-default ${
                   darkMode
-                    ? "bg-gradient-to-r from-purple-900/30 to-blue-900/30 text-purple-300 hover:from-purple-800/40 hover:to-blue-800/40"
-                    : "bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 hover:from-purple-200 hover:to-blue-200"
+                    ? "bg-linear-to-r from-purple-900/30 to-blue-900/30 text-purple-300 hover:from-purple-800/40 hover:to-blue-800/40"
+                    : "bg-linear-to-r from-purple-100 to-blue-100 text-purple-700 hover:from-purple-200 hover:to-blue-200"
                 } shadow-lg hover:shadow-xl ${
                   isVisible ? "animate-fadeInUp" : "opacity-0"
                 }`}

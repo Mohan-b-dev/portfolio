@@ -1,15 +1,5 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const dataFilePath = path.join(process.cwd(), "data", "footer-data.json");
-
-const ensureDataDirectory = () => {
-  const dataDir = path.join(process.cwd(), "data");
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
+import { readOrCreateSection, upsertSection } from "@/lib/db/mongo";
 
 const defaultData = {
   footer: {
@@ -43,15 +33,7 @@ const defaultData = {
 
 export async function GET() {
   try {
-    ensureDataDirectory();
-
-    if (!fs.existsSync(dataFilePath)) {
-      fs.writeFileSync(dataFilePath, JSON.stringify(defaultData, null, 2));
-      return NextResponse.json(defaultData);
-    }
-
-    const fileData = fs.readFileSync(dataFilePath, "utf8");
-    const data = JSON.parse(fileData);
+    const data = await readOrCreateSection("footer", defaultData);
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error reading footer data:", error);
@@ -61,15 +43,20 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    ensureDataDirectory();
-
     const newData = await request.json();
-    fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 2));
+    const success = await upsertSection("footer", newData);
 
-    return NextResponse.json({
-      success: true,
-      message: "Footer data saved successfully",
-    });
+    if (success) {
+      return NextResponse.json({
+        success: true,
+        message: "Footer data saved successfully",
+      });
+    }
+
+    return NextResponse.json(
+      { success: false, message: "Error saving footer data" },
+      { status: 500 }
+    );
   } catch (error) {
     console.error("Error saving footer data:", error);
     return NextResponse.json(

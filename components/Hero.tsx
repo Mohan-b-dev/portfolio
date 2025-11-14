@@ -41,6 +41,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [heroData, setHeroData] = useState<HeroData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   // Fetch hero data from JSON file
   const fetchHeroData = async () => {
@@ -49,7 +50,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
       const response = await fetch("/api/hero-data");
       const data = await response.json();
       setHeroData(data);
-    } catch (error) {
+    } catch {
       console.log("Error loading hero data, using defaults");
       setHeroData({
         name: "MOHAN",
@@ -69,8 +70,8 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           clients: "50+",
         },
         socialLinks: {
-          github: "https://github.com",
-          linkedin: "https://linkedin.com",
+          github: "https://github.com/Mohan-b-dev",
+          linkedin: "https://linkedin.com/mohan",
           email: "mailto:hello@johndoe.dev",
         },
       });
@@ -79,10 +80,16 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
     }
   };
 
+  // Set client-side flag
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Initial data fetch
   useEffect(() => {
+    if (!isClient) return;
     fetchHeroData();
-  }, []);
+  }, [isClient]);
 
   // Mouse movement parallax effect
   useEffect(() => {
@@ -143,17 +150,17 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
   const socialLinks = [
     {
       icon: Github,
-      href: heroData?.socialLinks.github || "https://github.com",
+      href: "https://github.com/Mohan-b-dev",
       label: "GitHub",
     },
     {
       icon: Linkedin,
-      href: heroData?.socialLinks.linkedin || "https://linkedin.com",
+      href: heroData?.socialLinks.linkedin || "https://linkedin.com/mohan",
       label: "LinkedIn",
     },
     {
       icon: Mail,
-      href: heroData?.socialLinks.email || "mailto:hello@johndoe.dev",
+      href: heroData?.socialLinks.email || "mohangokul515@johndoe.dev",
       label: "Email",
     },
   ];
@@ -185,10 +192,14 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
         className={`relative min-h-screen overflow-hidden flex items-center justify-center ${
           darkMode ? "bg-gray-900" : "bg-gray-50"
         }`}
+        suppressHydrationWarning
       >
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-          <p className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+          <p
+            className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+            suppressHydrationWarning
+          >
             Loading hero data...
           </p>
         </div>
@@ -202,6 +213,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
       className={`relative min-h-screen overflow-hidden flex items-center ${
         darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
+      suppressHydrationWarning
     >
       {/* Refresh Button - Development Only */}
       {process.env.NODE_ENV === "development" && (
@@ -256,7 +268,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
         >
           <div
             className={`p-4 rounded-2xl backdrop-blur-sm ${
-              darkMode ? "bg-white/10 text-white" : "bg-white/30 text-gray-700"
+              darkMode ? "bg-white/10 text-white" : "bg-white/30 text-gray-600"
             } transform hover:scale-110 transition-all duration-300 shadow-xl cursor-pointer`}
           >
             <element.icon className="w-8 h-8" />
@@ -269,11 +281,11 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
         <div className="text-center max-w-5xl mx-auto">
           {/* Profile Image */}
           <div className="mb-8 md:mb-10 relative inline-block">
-            <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 p-1 transform hover:scale-110 transition-all duration-500 animate-pulse-slow">
+            <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-linear-to-br from-purple-600 via-blue-600 to-emerald-500 p-1 transform hover:scale-110 transition-all duration-500 animate-pulse-slow">
               <div
                 className={`w-full h-full rounded-full ${
                   darkMode ? "bg-gray-800" : "bg-white"
-                } flex items-center justify-center text-4xl md:text-6xl font-bold bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 bg-clip-text text-transparent`}
+                } flex items-center justify-center text-4xl md:text-6xl font-bold bg-linear-to-br from-purple-600 via-blue-600 to-emerald-500 bg-clip-text text-transparent`}
               >
                 {heroData?.name?.charAt(0) || "M"}
               </div>
@@ -327,7 +339,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
             }`}
           >
             Hi, I&apos;m{" "}
-            <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 via-blue-600 to-emerald-500 bg-clip-text text-transparent">
               {heroData?.name || "MOHAN"}
             </span>
           </h1>
@@ -336,7 +348,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           <div className="mb-6 md:mb-8 h-12 md:h-16 flex items-center justify-center">
             <h2
               className={`text-2xl sm:text-3xl md:text-4xl font-semibold ${
-                darkMode ? "text-gray-300" : "text-gray-700"
+                darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
               {typedText}
@@ -358,7 +370,7 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 md:mb-16">
             <button
               onClick={() => scrollToSection("projects")}
-              className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl md:rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50 text-sm md:text-base"
+              className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-linear-to-r from-purple-600 to-blue-600 text-white rounded-xl md:rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50 text-sm md:text-base"
             >
               View My Work
             </button>

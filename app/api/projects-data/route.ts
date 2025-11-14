@@ -1,0 +1,118 @@
+import { NextResponse } from "next/server";
+import { readOrCreateSection, upsertSection } from "@/lib/db/mongo";
+
+const defaultData = {
+  sectionTitle: "Featured Projects",
+  sectionDescription:
+    "A showcase of my recent work, featuring innovative solutions and cutting-edge technologies",
+  githubUrl: "https://github.com",
+  viewAllText: "View All Projects on GitHub",
+  categories: ["All", "Web App", "Mobile App", "DevOps", "Blockchain"],
+  projects: [
+    {
+      id: 1,
+      title: "E-Commerce Platform",
+      description:
+        "A full-stack e-commerce solution with advanced features like real-time inventory, payment processing, and admin dashboard.",
+      image: "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg",
+      category: "Web App",
+      technologies: ["React", "Node.js", "MongoDB", "Stripe"],
+      github: "https://github.com",
+      live: "https://example.com",
+      featured: true,
+    },
+    {
+      id: 2,
+      title: "AI Task Manager",
+      description:
+        "An intelligent task management app that uses AI to prioritize tasks and suggest optimal work schedules.",
+      image:
+        "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg",
+      category: "Mobile App",
+      technologies: ["React Native", "Python", "TensorFlow", "Firebase"],
+      github: "https://github.com",
+      live: "https://example.com",
+      featured: true,
+    },
+    {
+      id: 3,
+      title: "Real-time Analytics Dashboard",
+      description:
+        "A comprehensive analytics platform with real-time data visualization and interactive charts for business insights.",
+      image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg",
+      category: "Web App",
+      technologies: ["Vue.js", "D3.js", "PostgreSQL", "WebSocket"],
+      github: "https://github.com",
+      live: "https://example.com",
+    },
+    {
+      id: 4,
+      title: "Cloud Infrastructure Tool",
+      description:
+        "DevOps tool for managing cloud infrastructure with automated deployment and monitoring capabilities.",
+      image: "https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg",
+      category: "DevOps",
+      technologies: ["Docker", "Kubernetes", "AWS", "Terraform"],
+      github: "https://github.com",
+      live: "https://example.com",
+    },
+    {
+      id: 5,
+      title: "Social Media App",
+      description:
+        "A modern social platform with real-time messaging, story features, and advanced privacy controls.",
+      image: "https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg",
+      category: "Mobile App",
+      technologies: ["React Native", "GraphQL", "Redis", "WebRTC"],
+      github: "https://github.com",
+      live: "https://example.com",
+      featured: true,
+    },
+    {
+      id: 6,
+      title: "Blockchain Wallet",
+      description:
+        "Secure cryptocurrency wallet with multi-chain support and DeFi integration capabilities.",
+      image: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg",
+      category: "Blockchain",
+      technologies: ["TypeScript", "Solidity", "Web3.js", "React"],
+      github: "https://github.com",
+      live: "https://example.com",
+    },
+  ],
+};
+
+export async function GET() {
+  try {
+    const data = await readOrCreateSection("projects", defaultData);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Error reading projects data:", error);
+    return NextResponse.json(defaultData);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const newData = await request.json();
+    const success = await upsertSection("projects", newData);
+
+    if (success) {
+      return NextResponse.json({
+        success: true,
+        message: "Projects data saved successfully",
+      });
+    }
+
+    return NextResponse.json(
+      { success: false, message: "Error saving projects data" },
+      { status: 500 }
+    );
+  } catch (error) {
+    console.error("Error saving projects data:", error);
+    return NextResponse.json(
+      { success: false, message: "Error saving projects data" },
+      { status: 500 }
+    );
+  }
+}

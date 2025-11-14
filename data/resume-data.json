@@ -1,5 +1,6 @@
 {
   "resumeUrl": "/resume.pdf",
   "buttonText": "Download Resume",
-  "fileName": "Mohan_Resume.pdf"
+  "fileName": "Mohan_Resume.pdf",
+  "resumeSource": "server"
 }

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Block access to admin areas
+Disallow: /admin
+
+# Allow access to API routes for crawlers
+Allow: /api/
+
+# Sitemap
+Sitemap: https://mohan-portfolio.vercel.app/sitemap.xml

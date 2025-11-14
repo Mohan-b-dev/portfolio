@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   User,
   Award,
@@ -48,6 +48,7 @@ const About = ({ darkMode = false }) => {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [dataVersion, setDataVersion] = useState(0);
+  const [isClient, setIsClient] = useState(false);
   const [counters, setCounters] = useState({
     experience: 0,
     projects: 0,
@@ -56,19 +57,48 @@ const About = ({ darkMode = false }) => {
   });
 
   // Fetch about data
-  const fetchAboutData = async () => {
+  const fetchAboutData = useCallback(async () => {
+    // Only run on client side
+    if (!isClient) return;
+
+    // Skip network fetch when offline
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      console.warn("⚠️ Offline - skipping about-data fetch");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/about-data?t=" + Date.now());
+      console.log("🔄 Fetching about data...");
+      // Use relative URL to avoid origin issues during dev/preview
+      const url = `/api/about-data?t=${Date.now()}`;
+      console.log("📡 Fetching from:", url);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log("✅ About data loaded successfully:", data);
       setAboutData(data);
       setCounters({ experience: 0, projects: 0, clients: 0, commits: 0 });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("❌ Error loading about data:", error);
+      if ((error as { name?: string })?.name === "AbortError") {
+        console.error("⏰ Fetch request timed out");
+      }
+      // Fallback data
       setAboutData({
         stats: {
           experience: 5,
@@ -86,43 +116,83 @@ const About = ({ darkMode = false }) => {
         techStack: "React,TypeScript,Node.js,Python,AWS,Docker",
       });
     }
-  };
+  }, [isClient]);
 
   // Fetch resume data
-  const fetchResumeData = async () => {
+  const fetchResumeData = useCallback(async () => {
+    // Only run on client side
+    if (!isClient) return;
+
+    // Skip network fetch when offline
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      console.warn("⚠️ Offline - skipping resume-data fetch");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/resume-data?t=" + Date.now());
+      console.log("🔄 Fetching resume data...");
+      // Use relative URL to avoid origin issues during dev/preview
+      const url = `/api/resume-data?t=${Date.now()}`;
+      console.log("📡 Fetching resume from:", url);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log("✅ Resume data loaded successfully:", data);
       setResumeData(data);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("❌ Error loading resume data:", error);
+      if ((error as { name?: string })?.name === "AbortError") {
+        console.error("⏰ Resume fetch request timed out");
+      }
+      // Fallback data
       setResumeData({
         resumeUrl: "/resume.pdf",
         buttonText: "Download Resume",
         fileName: "Mohan_Resume.pdf",
       });
     }
-  };
+  }, [isClient]);
 
-  // Fetch all data
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      await Promise.all([fetchAboutData(), fetchResumeData()]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Set client-side flag
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Initial data fetch
   useEffect(() => {
+    // Only run data fetching on client side
+    if (!isClient) return;
+
+    const fetchData = async () => {
+      try {
+        console.log("🚀 Starting data fetch for About component");
+        setIsLoading(true);
+        await Promise.all([fetchAboutData(), fetchResumeData()]);
+        console.log("✅ All data fetched successfully");
+      } catch (error) {
+        console.error("❌ Error in data fetch:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchData();
-  }, [dataVersion]);
+  }, [dataVersion, isClient, fetchAboutData, fetchResumeData]);
 
   // Auto-refresh in development
   useEffect(() => {
@@ -227,7 +297,7 @@ const About = ({ darkMode = false }) => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [isVisible, aboutData, dataVersion]);
+  }, [isVisible, aboutData, dataVersion, stats]);
 
   const formatStatValue = (
     key: StatKey,
@@ -250,12 +320,14 @@ const About = ({ darkMode = false }) => {
       <section
         id="about"
         className={`py-20 ${darkMode ? "bg-gray-900" : "bg-white"}`}
+        suppressHydrationWarning
       >
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
             <p
               className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+              suppressHydrationWarning
             >
               Loading about data...
             </p>
@@ -268,7 +340,10 @@ const About = ({ darkMode = false }) => {
   return (
     <section
       id="about"
-      className={`py-20 ${darkMode ? "bg-gray-900" : "bg-white"}`}
+      className={`py-16 md:py-20 lg:py-24 ${
+        darkMode ? "bg-gray-900" : "bg-white"
+      }`}
+      suppressHydrationWarning
     >
       {/* Refresh Button - Development Only */}
       {process.env.NODE_ENV === "development" && (
@@ -293,7 +368,7 @@ const About = ({ darkMode = false }) => {
             }`}
           >
             About{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Me
             </span>
           </h2>
@@ -338,7 +413,7 @@ const About = ({ darkMode = false }) => {
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <button
                   onClick={handleDownloadResume}
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium bg-linear-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   {resumeData.buttonText}
@@ -361,8 +436,8 @@ const About = ({ darkMode = false }) => {
               <div
                 className={`p-8 rounded-3xl shadow-2xl transform transition-all duration-500 hover:shadow-3xl ${
                   darkMode
-                    ? "bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700"
-                    : "bg-gradient-to-br from-white to-gray-50 border border-gray-200"
+                    ? "bg-linear-to-br from-gray-800 to-gray-900 border border-gray-700"
+                    : "bg-linear-to-br from-white to-gray-50 border border-gray-200"
                 }`}
               >
                 <div className="space-y-6">
@@ -420,7 +495,7 @@ const About = ({ darkMode = false }) => {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
+            {stats.map((stat) => (
               <div
                 key={stat.label}
                 className={`text-center p-6 rounded-2xl backdrop-blur-sm transform hover:scale-105 transition-all duration-300 ${
@@ -429,7 +504,7 @@ const About = ({ darkMode = false }) => {
                     : "bg-gray-50 hover:bg-gray-100 border border-gray-200"
                 }`}
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl mb-4 shadow-lg">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-linear-to-r from-purple-600 to-blue-600 rounded-xl mb-4 shadow-lg">
                   <stat.icon className="w-6 h-6 text-white" />
                 </div>
                 <div

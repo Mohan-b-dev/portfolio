@@ -1,15 +1,5 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const dataFilePath = path.join(process.cwd(), "data", "hero-data.json");
-
-const ensureDataDirectory = () => {
-  const dataDir = path.join(process.cwd(), "data");
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
+import { readOrCreateSection, upsertSection } from "@/lib/db/mongo";
 
 const defaultData = {
   name: "MOHAN",
@@ -37,35 +27,38 @@ const defaultData = {
 
 export async function GET() {
   try {
-    ensureDataDirectory();
-
-    if (!fs.existsSync(dataFilePath)) {
-      fs.writeFileSync(dataFilePath, JSON.stringify(defaultData, null, 2));
-      return NextResponse.json(defaultData);
-    }
-
-    const fileData = fs.readFileSync(dataFilePath, "utf8");
-    const data = JSON.parse(fileData);
+    console.log("[API] Hero GET request received");
+    const data = await readOrCreateSection("hero", defaultData);
+    console.log("[API] Returning hero data:", { name: data?.name });
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error reading hero data:", error);
+    console.error("[API] Error reading hero data:", error);
     return NextResponse.json(defaultData);
   }
 }
 
 export async function POST(request: Request) {
   try {
-    ensureDataDirectory();
-
+    console.log("[API] Hero POST request received");
     const newData = await request.json();
-    fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 2));
+    console.log("[API] Saving hero data:", { name: newData.name });
+    const success = await upsertSection("hero", newData);
 
-    return NextResponse.json({
-      success: true,
-      message: "Hero data saved successfully",
-    });
+    if (success) {
+      console.log("[API] Hero data saved successfully");
+      return NextResponse.json({
+        success: true,
+        message: "Hero data saved successfully",
+      });
+    }
+
+    console.error("[API] Failed to save hero data");
+    return NextResponse.json(
+      { success: false, message: "Error saving hero data" },
+      { status: 500 }
+    );
   } catch (error) {
-    console.error("Error saving hero data:", error);
+    console.error("[API] Error saving hero data:", error);
     return NextResponse.json(
       { success: false, message: "Error saving hero data" },
       { status: 500 }

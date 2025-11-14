@@ -214,14 +214,16 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
       <section
         id="contact"
         className={`py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
-          darkMode ? "bg-gray-900" : "bg-gray-50"
+          darkMode ? "bg-gray-900" : "bg-white"
         }`}
+        suppressHydrationWarning
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
             <p
               className={`mt-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+              suppressHydrationWarning
             >
               Loading contact information...
             </p>
@@ -235,8 +237,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
     <section
       id="contact"
       className={`py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
-        darkMode ? "bg-gray-900" : "bg-gray-50"
+        darkMode ? "bg-gray-900" : "bg-white"
       }`}
+      suppressHydrationWarning
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -251,11 +254,11 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
             }`}
           >
             {contactData.contactTitle.split(" ")[0]}{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               {contactData.contactTitle.split(" ").slice(1).join(" ")}
             </span>
           </h2>
-          <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto rounded-full mb-6 md:mb-8"></div>
+          <div className="w-16 sm:w-20 h-1 bg-linear-to-r from-purple-600 to-blue-600 mx-auto rounded-full mb-6 md:mb-8"></div>
           <p
             className={`text-base md:text-xl max-w-3xl mx-auto ${
               darkMode ? "text-gray-300" : "text-gray-600"
@@ -309,8 +312,8 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                     } shadow-lg hover:shadow-xl`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="shrink-0">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-linear-to-r from-purple-600 to-blue-600 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                       <info.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </div>
                   </div>
@@ -334,7 +337,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
             <div className="pt-4 md:pt-6">
               <h4
                 className={`text-sm md:text-base font-semibold mb-3 md:mb-4 ${
-                  darkMode ? "text-gray-300" : "text-gray-700"
+                  darkMode ? "text-gray-300" : "text-gray-600"
                 }`}
               >
                 Connect with me
@@ -350,8 +353,8 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                     className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center
                       transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${
                         darkMode
-                          ? "bg-gray-800 hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600"
-                          : "bg-white hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600"
+                          ? "bg-gray-800 hover:bg-linear-to-r hover:from-purple-600 hover:to-blue-600"
+                          : "bg-white hover:bg-linear-to-r hover:from-purple-600 hover:to-blue-600"
                       } shadow-lg hover:shadow-xl`}
                   >
                     <social.icon
@@ -366,8 +369,8 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
 
             {/* 3D Floating Elements - Desktop Only */}
             <div className="relative mt-8 md:mt-12 hidden lg:block">
-              <div className="absolute top-0 right-0 w-16 md:w-20 h-16 md:h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
-              <div className="absolute bottom-0 left-0 w-12 md:w-16 h-12 md:h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full opacity-20 animate-bounce"></div>
+              <div className="absolute top-0 right-0 w-16 md:w-20 h-16 md:h-20 bg-linear-to-r from-purple-600 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
+              <div className="absolute bottom-0 left-0 w-12 md:w-16 h-12 md:h-16 bg-linear-to-r from-emerald-500 to-teal-600 rounded-full opacity-20 animate-bounce"></div>
             </div>
           </div>
 
@@ -383,7 +386,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                 <div>
                   <label
                     className={`block text-sm font-medium mb-2 ${
-                      darkMode ? "text-gray-300" : "text-gray-700"
+                      darkMode ? "text-gray-300" : "text-gray-600"
                     }`}
                   >
                     Full Name *
@@ -412,7 +415,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                 <div>
                   <label
                     className={`block text-sm font-medium mb-2 ${
-                      darkMode ? "text-gray-300" : "text-gray-700"
+                      darkMode ? "text-gray-300" : "text-gray-600"
                     }`}
                   >
                     Email Address *
@@ -442,7 +445,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
               <div>
                 <label
                   className={`block text-sm font-medium mb-2 ${
-                    darkMode ? "text-gray-300" : "text-gray-700"
+                    darkMode ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
                   Subject *
@@ -471,7 +474,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
               <div>
                 <label
                   className={`block text-sm font-medium mb-2 ${
-                    darkMode ? "text-gray-300" : "text-gray-700"
+                    darkMode ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
                   Message *
@@ -504,7 +507,7 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                   transition-all duration-300 transform hover:scale-105 ${
                     isSubmitted
                       ? "bg-green-500 text-white"
-                      : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/25"
+                      : "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/25"
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
               >
                 <div className="flex items-center justify-center space-x-2">

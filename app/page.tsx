@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useDarkMode } from "@/lib/context/DarkModeContext";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -11,31 +12,11 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useDarkMode();
   const [scrollPercentage, setScrollPercentage] = useState(0);
-  const [mounted, setMounted] = useState(false);
 
   // ---------- Custom cursor ----------
   const cursorRef = useRef<HTMLDivElement>(null);
-
-  // ---------- Mount + theme ----------
-  useEffect(() => {
-    setMounted(true);
-
-    const saved = localStorage.getItem("darkMode");
-    if (saved !== null) {
-      setDarkMode(JSON.parse(saved));
-    } else {
-      setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
-    }
-  }, []);
-
-  // ---------- Dark-mode toggle ----------
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem("darkMode", JSON.stringify(newMode));
-  };
 
   // ---------- Scroll progress ----------
   useEffect(() => {
@@ -81,9 +62,6 @@ export default function Home() {
     };
   }, []);
 
-  // ---------- Prevent FOUC ----------
-  if (!mounted) return null;
-
   // ---------- Dark-mode aware cursor color ----------
   const cursorBg = darkMode
     ? "rgba(167, 139, 250, 0.35)" // purple-ish for dark
@@ -94,23 +72,26 @@ export default function Home() {
       className={`min-h-screen transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
+      suppressHydrationWarning
     >
       {/* ---------- Scroll Progress Bar ---------- */}
       <div className="fixed top-0 left-0 w-full h-1 z-50 pointer-events-none">
         <div
-          className="h-full bg-gradient-to-r from-purple-600 to-blue-600 transition-all duration-300"
+          className="h-full bg-linear-to-r from-purple-600 to-blue-600 transition-all duration-300"
           style={{ width: `${scrollPercentage}%` }}
         />
       </div>
 
       {/* ---------- Sections ---------- */}
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <Hero darkMode={darkMode} />
-      <About darkMode={darkMode} />
-      <Skills darkMode={darkMode} />
-      <Projects darkMode={darkMode} />
-      <Contact darkMode={darkMode} />
-      <Footer darkMode={darkMode} />
+      <main id="main-content">
+        <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        <Hero darkMode={darkMode} />
+        <About darkMode={darkMode} />
+        <Skills darkMode={darkMode} />
+        <Projects darkMode={darkMode} />
+        <Contact darkMode={darkMode} />
+        <Footer darkMode={darkMode} />
+      </main>
 
       {/* ---------- Back-to-top ---------- */}
       <button
@@ -119,7 +100,7 @@ export default function Home() {
           scrollPercentage > 10
             ? "opacity-100"
             : "opacity-0 pointer-events-none"
-        } bg-gradient-to-r from-purple-600 to-blue-600 text-white`}
+        } bg-linear-to-r from-purple-600 to-blue-600 text-white`}
         aria-label="Scroll to top"
       >
         <svg
@@ -142,6 +123,7 @@ export default function Home() {
         ref={cursorRef}
         className="custom-cursor hidden lg:block"
         style={{ backgroundColor: cursorBg }}
+        suppressHydrationWarning
       />
 
       {/* ---------- Global inline styles (kept for scroll-behavior) ---------- */}

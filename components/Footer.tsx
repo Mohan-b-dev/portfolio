@@ -34,7 +34,6 @@ interface FooterData {
 }
 
 const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
-  const [showScrollTop, setShowScrollTop] = useState(true);
   const [footerData, setFooterData] = useState<FooterData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -133,15 +132,17 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
       <footer
         className={`relative w-full py-12 md:py-16 transition-colors duration-300 ${
           darkMode
-            ? "bg-gradient-to-b from-gray-900 to-black"
-            : "bg-gradient-to-b from-gray-50 to-white"
+            ? "bg-linear-to-b from-gray-900 to-black"
+            : "bg-linear-to-b from-gray-50 to-white"
         }`}
+        suppressHydrationWarning
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
             <p
               className={`mt-2 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+              suppressHydrationWarning
             >
               Loading footer...
             </p>
@@ -155,9 +156,10 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
     <footer
       className={`relative w-full py-12 md:py-16 transition-colors duration-300 ${
         darkMode
-          ? "bg-gradient-to-b from-gray-900 to-black"
-          : "bg-gradient-to-b from-gray-50 to-white"
+          ? "bg-linear-to-b from-gray-900 to-black"
+          : "bg-linear-to-b from-gray-50 to-white"
       }`}
+      suppressHydrationWarning
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
@@ -166,7 +168,7 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2">
               <Code className="w-8 h-8 text-purple-600" />
-              <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <div className="text-2xl md:text-3xl font-bold bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 {footerData.footer.name}
               </div>
             </div>
@@ -280,8 +282,8 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
                   text-sm md:text-base font-medium transition-all duration-300 
                   transform hover:scale-105 ${
                     darkMode
-                      ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg hover:shadow-purple-500/25"
-                      : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/30"
+                      ? "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg hover:shadow-purple-500/25"
+                      : "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/30"
                   }`}
               >
                 Get In Touch
@@ -352,20 +354,18 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
       </div>
 
       {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className={`fixed bottom-6 right-6 p-3 md:p-4 rounded-full shadow-lg 
-            transition-all duration-300 hover:scale-110 hover:-translate-y-1 z-50 ${
-              darkMode
-                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-purple-500/25"
-                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/30"
-            }`}
-          aria-label="Scroll to top"
-        >
-          <ArrowUp className="w-5 h-5 md:w-6 md:h-6" />
-        </button>
-      )}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-6 right-6 p-3 md:p-4 rounded-full shadow-lg 
+          transition-all duration-300 hover:scale-110 hover:-translate-y-1 z-50 ${
+            darkMode
+              ? "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-purple-500/25"
+              : "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/30"
+          }`}
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="w-5 h-5 md:w-6 md:h-6" />
+      </button>
 
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-32 h-32 bg-purple-600/5 rounded-full blur-3xl pointer-events-none"></div>
