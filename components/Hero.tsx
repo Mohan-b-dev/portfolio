@@ -10,8 +10,8 @@ import {
   Linkedin,
   Mail,
   Sparkles,
-  RefreshCw,
 } from "lucide-react";
+import MovingObjects from "./MovingObjects";
 
 interface HeroProps {
   darkMode?: boolean;
@@ -215,18 +215,8 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
       }`}
       suppressHydrationWarning
     >
-      {/* Refresh Button - Development Only */}
-      {process.env.NODE_ENV === "development" && (
-        <div className="absolute top-4 right-4 z-30">
-          <button
-            onClick={fetchHeroData}
-            className="inline-flex items-center px-3 py-2 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <RefreshCw className="w-3 h-3 mr-1" />
-            Refresh
-          </button>
-        </div>
-      )}
+      {/* Moving Objects Background */}
+      <MovingObjects variant="hero" density="medium" mode="section" />
 
       {/* Animated Background Gradient */}
       <div className="absolute inset-0 overflow-hidden">
@@ -261,15 +251,15 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
       {floatingElements.map((element, index) => (
         <div
           key={index}
-          className={`absolute ${element.position} hidden lg:block animate-float`}
+          className={`absolute ${element.position} hidden lg:block animate-float stagger-item`}
           style={{
             animationDelay: element.delay,
           }}
         >
           <div
-            className={`p-4 rounded-2xl backdrop-blur-sm ${
-              darkMode ? "bg-white/10 text-white" : "bg-white/30 text-gray-600"
-            } transform hover:scale-110 transition-all duration-300 shadow-xl cursor-pointer`}
+            className={`p-4 rounded-2xl backdrop-blur-sm glass-effect ${
+              darkMode ? "text-white" : "text-gray-600"
+            } transform hover:scale-110 transition-all duration-300 shadow-xl cursor-pointer glow-hover`}
           >
             <element.icon className="w-8 h-8" />
           </div>
@@ -280,8 +270,11 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-0 relative z-10">
         <div className="text-center max-w-5xl mx-auto">
           {/* Profile Image */}
-          <div className="mb-8 md:mb-10 relative inline-block">
-            <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-linear-to-br from-purple-600 via-blue-600 to-emerald-500 p-1 transform hover:scale-110 transition-all duration-500 animate-pulse-slow">
+          <div
+            className="mb-8 md:mb-10 relative inline-block animate-slideInDown"
+            style={{ animationDelay: "0s" }}
+          >
+            <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-linear-to-br from-purple-600 via-blue-600 to-emerald-500 p-1 transform hover:scale-110 transition-all duration-500 animate-pulse-slow card-hover">
               <div
                 className={`w-full h-full rounded-full ${
                   darkMode ? "bg-gray-800" : "bg-white"
@@ -300,19 +293,23 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           </div>
 
           {/* Social Links - Mobile Top */}
-          <div className="flex justify-center space-x-4 mb-6 lg:hidden">
-            {socialLinks.map((social) => (
+          <div
+            className="flex justify-center space-x-4 mb-6 lg:hidden animate-fadeInUp"
+            style={{ animationDelay: "0.1s" }}
+          >
+            {socialLinks.map((social, index) => (
               <a
                 key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className={`p-3 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${
+                className={`p-3 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 glass-effect-dark ${
                   darkMode
-                    ? "bg-gray-800/50 text-gray-300 hover:text-white hover:bg-gray-700"
-                    : "bg-white/50 text-gray-600 hover:text-gray-900 hover:bg-white"
-                } backdrop-blur-sm shadow-lg`}
+                    ? "text-gray-300 hover:text-white"
+                    : "text-gray-600 hover:text-gray-900"
+                } backdrop-blur-sm shadow-lg stagger-item`}
+                style={{ animationDelay: `${0.1 + index * 0.1}s` }}
               >
                 <social.icon className="w-5 h-5" />
               </a>
@@ -320,13 +317,18 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           </div>
 
           {/* Greeting */}
-          <div className="mb-4 md:mb-6">
+          <div
+            className="mb-4 md:mb-6 animate-fadeInUp"
+            style={{ animationDelay: "0.1s" }}
+          >
             <span
               className={`inline-block px-4 py-2 rounded-full text-sm md:text-base font-medium ${
                 darkMode
                   ? "bg-purple-900/30 text-purple-300"
                   : "bg-purple-100 text-purple-700"
-              } backdrop-blur-sm`}
+              } backdrop-blur-sm border ${
+                darkMode ? "border-purple-700/50" : "border-purple-200/50"
+              } glow-effect`}
             >
               {heroData?.greeting || "👋 Welcome to my portfolio"}
             </span>
@@ -336,18 +338,22 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           <h1
             className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4 md:mb-6 ${
               darkMode ? "text-white" : "text-gray-900"
-            }`}
+            } animate-zoomInUp`}
+            style={{ animationDelay: "0.2s" }}
           >
             Hi, I&apos;m{" "}
-            <span className="bg-linear-to-r from-purple-600 via-blue-600 to-emerald-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 via-blue-600 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
               {heroData?.name || "MOHAN"}
             </span>
           </h1>
 
           {/* Typing Animation */}
-          <div className="mb-6 md:mb-8 h-12 md:h-16 flex items-center justify-center">
+          <div
+            className="mb-6 md:mb-8 h-12 md:h-16 flex items-center justify-center animate-slideInUp"
+            style={{ animationDelay: "0.3s" }}
+          >
             <h2
-              className={`text-2xl sm:text-3xl md:text-4xl font-semibold ${
+              className={`text-2xl sm:text-3xl md:text-4xl font-semibold bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent ${
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
@@ -360,23 +366,27 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           <p
             className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto mb-8 md:mb-10 px-4 ${
               darkMode ? "text-gray-300" : "text-gray-600"
-            }`}
+            } animate-fadeInUp`}
+            style={{ animationDelay: "0.4s" }}
           >
             {heroData?.description ||
               "Crafting digital experiences with cutting-edge technology and innovative design. Passionate about creating solutions that make a difference."}
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 md:mb-16">
+          <div
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 md:mb-16 animate-fadeInUp"
+            style={{ animationDelay: "0.5s" }}
+          >
             <button
               onClick={() => scrollToSection("projects")}
-              className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-linear-to-r from-purple-600 to-blue-600 text-white rounded-xl md:rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50 text-sm md:text-base"
+              className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-linear-to-r from-purple-600 to-blue-600 text-white rounded-xl md:rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50 text-sm md:text-base card-hover glow-hover"
             >
               View My Work
             </button>
             <button
               onClick={() => scrollToSection("contact")}
-              className={`w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border-2 rounded-xl md:rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300 text-sm md:text-base ${
+              className={`w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border-2 rounded-xl md:rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300 text-sm md:text-base card-hover ${
                 darkMode
                   ? "border-purple-500 text-purple-400 hover:bg-purple-500/10"
                   : "border-purple-600 text-purple-600 hover:bg-purple-50"
@@ -387,16 +397,20 @@ const Hero: React.FC<HeroProps> = ({ darkMode = false }) => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto">
+          <div
+            className="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto animate-zoomInUp"
+            style={{ animationDelay: "0.6s" }}
+          >
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className={`p-4 md:p-6 rounded-xl md:rounded-2xl backdrop-blur-sm ${
-                  darkMode ? "bg-white/5" : "bg-white/50"
-                } transform hover:scale-105 transition-all duration-300`}
+                className={`p-4 md:p-6 rounded-xl md:rounded-2xl glass-effect ${
+                  darkMode ? "" : "glass-effect"
+                } transform hover:scale-105 transition-all duration-300 card-hover stagger-item`}
+                style={{ animationDelay: `${0.7 + index * 0.1}s` }}
               >
                 <div
-                  className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-2 ${
+                  className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-2 bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent ${
                     darkMode ? "text-white" : "text-gray-900"
                   }`}
                 >

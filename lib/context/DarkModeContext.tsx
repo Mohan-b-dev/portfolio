@@ -11,6 +11,8 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(
   undefined
 );
 
+export { DarkModeContext };
+
 /**
  * DarkModeProvider - Provides dark mode state to all child components
  * Eliminates prop drilling and centralizes dark mode logic
@@ -24,15 +26,16 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(
 export function DarkModeProvider({ children }: { children: ReactNode }) {
   // Use a function to initialize state only on client-side
   const [darkMode, setDarkMode] = useState(() => {
-    // Always return false on server, will be updated on client
-    if (typeof window === "undefined") return false;
+    // Always return true (dark mode) on server for better UX
+    if (typeof window === "undefined") return true;
 
-    // On client, read from localStorage or system preference
+    // On client, read from localStorage or default to dark mode
     const saved = localStorage.getItem("darkMode");
     if (saved !== null) {
       return JSON.parse(saved);
     }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // Default to dark mode instead of system preference
+    return true;
   });
 
   const toggleDarkMode = () => {

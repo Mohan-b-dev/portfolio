@@ -1,16 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Send,
-  CheckCircle,
-  Linkedin,
-  Github,
-  Twitter,
-} from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import MovingObjects from "./MovingObjects";
 
 interface ContactProps {
   darkMode?: boolean;
@@ -191,24 +183,6 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
     },
   ];
 
-  const socialLinks = [
-    {
-      icon: Github,
-      href: contactData?.socialMedia?.github || "https://github.com",
-      label: "GitHub",
-    },
-    {
-      icon: Linkedin,
-      href: contactData?.socialMedia?.linkedin || "https://linkedin.com",
-      label: "LinkedIn",
-    },
-    {
-      icon: Twitter,
-      href: contactData?.socialMedia?.twitter || "https://twitter.com",
-      label: "Twitter",
-    },
-  ];
-
   if (isLoading || !contactData) {
     return (
       <section
@@ -236,12 +210,21 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
   return (
     <section
       id="contact"
-      className={`py-16 md:py-20 lg:py-24 transition-colors duration-300 ${
-        darkMode ? "bg-gray-900" : "bg-white"
-      }`}
+      className={`relative py-16 md:py-20 lg:py-24 transition-colors duration-300 overflow-hidden`}
       suppressHydrationWarning
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Moving Objects Background */}
+      <MovingObjects variant="contact" density="high" mode="section" />
+
+      {/* Background overlay */}
+      {darkMode && (
+        <div className="absolute inset-0 bg-gray-900/85 pointer-events-none z-5"></div>
+      )}
+      {!darkMode && (
+        <div className="absolute inset-0 bg-white/85 pointer-events-none z-5"></div>
+      )}
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div
           className={`text-center mb-12 md:mb-16 ${
@@ -333,40 +316,6 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
               ))}
             </div>
 
-            {/* Social Links */}
-            <div className="pt-4 md:pt-6">
-              <h4
-                className={`text-sm md:text-base font-semibold mb-3 md:mb-4 ${
-                  darkMode ? "text-gray-300" : "text-gray-600"
-                }`}
-              >
-                Connect with me
-              </h4>
-              <div className="flex space-x-3 md:space-x-4">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center
-                      transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${
-                        darkMode
-                          ? "bg-gray-800 hover:bg-linear-to-r hover:from-purple-600 hover:to-blue-600"
-                          : "bg-white hover:bg-linear-to-r hover:from-purple-600 hover:to-blue-600"
-                      } shadow-lg hover:shadow-xl`}
-                  >
-                    <social.icon
-                      className={`w-5 h-5 md:w-6 md:h-6 ${
-                        darkMode ? "text-gray-300" : "text-gray-600"
-                      } hover:text-white transition-colors`}
-                    />
-                  </a>
-                ))}
-              </div>
-            </div>
-
             {/* 3D Floating Elements - Desktop Only */}
             <div className="relative mt-8 md:mt-12 hidden lg:block">
               <div className="absolute top-0 right-0 w-16 md:w-20 h-16 md:h-20 bg-linear-to-r from-purple-600 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
@@ -376,8 +325,10 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
 
           {/* Contact Form */}
           <div
-            className={`p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl ${
-              darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"
+            className={`p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl card-hover ${
+              darkMode
+                ? "bg-gray-800/90 border border-gray-700/50 glass-effect-dark"
+                : "bg-white/95 glass-effect"
             } ${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
           >
             <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
@@ -397,9 +348,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                     value={formData.name}
                     onChange={handleChange}
                     className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border-2 
-                      transition-all duration-300 focus:scale-[1.02] ${
+                      transition-all duration-300 focus:scale-[1.02] input-focus ${
                         errors.name
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                           : darkMode
                           ? "bg-gray-700 border-gray-600 text-white focus:border-purple-500"
                           : "bg-gray-50 border-gray-200 text-gray-900 focus:border-purple-500"
@@ -407,7 +358,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                     placeholder="John Doe"
                   />
                   {errors.name && (
-                    <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                    <p className="text-red-500 text-xs mt-1 animate-slideDown">
+                      {errors.name}
+                    </p>
                   )}
                 </div>
 
@@ -426,9 +379,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                     value={formData.email}
                     onChange={handleChange}
                     className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border-2 
-                      transition-all duration-300 focus:scale-[1.02] ${
+                      transition-all duration-300 focus:scale-[1.02] input-focus ${
                         errors.email
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                           : darkMode
                           ? "bg-gray-700 border-gray-600 text-white focus:border-purple-500"
                           : "bg-gray-50 border-gray-200 text-gray-900 focus:border-purple-500"
@@ -436,7 +389,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                     placeholder="john@example.com"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                    <p className="text-red-500 text-xs mt-1 animate-slideDown">
+                      {errors.email}
+                    </p>
                   )}
                 </div>
               </div>
@@ -456,9 +411,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                   value={formData.subject}
                   onChange={handleChange}
                   className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border-2 
-                    transition-all duration-300 focus:scale-[1.02] ${
+                    transition-all duration-300 focus:scale-[1.02] input-focus ${
                       errors.subject
-                        ? "border-red-500 focus:border-red-500"
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                         : darkMode
                         ? "bg-gray-700 border-gray-600 text-white focus:border-purple-500"
                         : "bg-gray-50 border-gray-200 text-gray-900 focus:border-purple-500"
@@ -466,7 +421,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                   placeholder="Let's work together!"
                 />
                 {errors.subject && (
-                  <p className="text-red-500 text-xs mt-1">{errors.subject}</p>
+                  <p className="text-red-500 text-xs mt-1 animate-slideDown">
+                    {errors.subject}
+                  </p>
                 )}
               </div>
 
@@ -485,9 +442,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                   onChange={handleChange}
                   rows={5}
                   className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border-2 
-                    transition-all duration-300 focus:scale-[1.02] resize-none ${
+                    transition-all duration-300 focus:scale-[1.02] resize-none input-focus ${
                       errors.message
-                        ? "border-red-500 focus:border-red-500"
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                         : darkMode
                         ? "bg-gray-700 border-gray-600 text-white focus:border-purple-500"
                         : "bg-gray-50 border-gray-200 text-gray-900 focus:border-purple-500"
@@ -495,7 +452,9 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                   placeholder="Tell me about your project..."
                 />
                 {errors.message && (
-                  <p className="text-red-500 text-xs mt-1">{errors.message}</p>
+                  <p className="text-red-500 text-xs mt-1 animate-slideDown">
+                    {errors.message}
+                  </p>
                 )}
               </div>
 
@@ -504,10 +463,10 @@ const Contact: React.FC<ContactProps> = ({ darkMode = false }) => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full py-3 md:py-4 px-6 rounded-lg md:rounded-xl font-semibold text-sm md:text-base
-                  transition-all duration-300 transform hover:scale-105 ${
+                  transition-all duration-300 transform hover:scale-105 card-hover ${
                     isSubmitted
-                      ? "bg-green-500 text-white"
-                      : "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/25"
+                      ? "bg-green-500 text-white animate-success"
+                      : "bg-linear-to-r from-purple-600 to-blue-600 text-white hover:shadow-xl hover:shadow-purple-500/25 glow-effect"
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
               >
                 <div className="flex items-center justify-center space-x-2">

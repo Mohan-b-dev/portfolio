@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { ExternalLink, Github, ArrowRight, Filter, Star } from "lucide-react";
+import MovingObjects from "./MovingObjects";
 
 interface ProjectsProps {
   darkMode?: boolean;
@@ -237,7 +238,10 @@ const Projects: React.FC<ProjectsProps> = ({ darkMode = false }) => {
       }`}
       suppressHydrationWarning
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Moving Objects Background */}
+      <MovingObjects variant="projects" density="medium" mode="section" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div
           className={`text-center mb-12 md:mb-16 ${
@@ -343,11 +347,13 @@ const Projects: React.FC<ProjectsProps> = ({ darkMode = false }) => {
             ? filteredProjects.map((project, index) => (
                 <div
                   key={project.id}
-                  className={`group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 ${
+                  className={`group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-xl card-hover glass-effect ${
                     darkMode
-                      ? "bg-gray-700 border border-gray-600"
-                      : "bg-white border border-gray-200"
-                  } ${isVisible ? "animate-fadeInUp" : "opacity-0"}`}
+                      ? "bg-gray-700/50 border border-gray-600/50"
+                      : "bg-white/80 border border-gray-200/50"
+                  } ${
+                    isVisible ? "animate-fadeInUp" : "opacity-0"
+                  } stagger-item`}
                   style={{
                     animationDelay: `${0.4 + index * 0.1}s`,
                   }}
@@ -355,8 +361,8 @@ const Projects: React.FC<ProjectsProps> = ({ darkMode = false }) => {
                   {/* Featured Badge */}
                   {project.featured && (
                     <div className="absolute top-4 left-4 z-10">
-                      <div className="flex items-center space-x-1 px-3 py-1.5 bg-linear-to-r from-yellow-500 to-orange-500 rounded-full text-white text-xs font-semibold shadow-lg">
-                        <Star className="w-5 h-5 fill-current" />
+                      <div className="flex items-center space-x-1 px-3 py-1.5 bg-linear-to-r from-yellow-500 to-orange-500 rounded-full text-white text-xs font-semibold shadow-lg animate-bounce-soft">
+                        <Star className="w-5 h-5 fill-current animate-spin" />
                         <span>Featured</span>
                       </div>
                     </div>
@@ -369,7 +375,7 @@ const Projects: React.FC<ProjectsProps> = ({ darkMode = false }) => {
                       src={project.image}
                       alt={project.title}
                       loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:rotate-1"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 

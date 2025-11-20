@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DarkModeProvider } from "@/lib/context/DarkModeContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import MovingObjects from "@/components/MovingObjects";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -162,6 +163,7 @@ export default function RootLayout({
         <DarkModeProvider>
           <ErrorBoundary>
             <div id="root" className="relative">
+              <MovingObjects variant="hero" density="medium" />
               <a
                 href="#main-content"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-purple-600 text-white px-4 py-2 rounded-md z-50 transition-all duration-200 hover:bg-purple-700"

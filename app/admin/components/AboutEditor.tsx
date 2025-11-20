@@ -23,7 +23,7 @@ const AboutEditor: React.FC<EditorProps> = ({
       {/* Statistics Section */}
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-          <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+          <div className="p-2 bg-linear-to-r from-green-500 to-emerald-500 rounded-lg">
             <Settings className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -38,7 +38,7 @@ const AboutEditor: React.FC<EditorProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <Award className="w-4 h-4 text-green-500" />
               Years Experience
             </label>
@@ -58,7 +58,7 @@ const AboutEditor: React.FC<EditorProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <Coffee className="w-4 h-4 text-green-500" />
               Projects Completed
             </label>
@@ -77,7 +77,7 @@ const AboutEditor: React.FC<EditorProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <User className="w-4 h-4 text-green-500" />
               Happy Clients
             </label>
@@ -96,7 +96,7 @@ const AboutEditor: React.FC<EditorProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <Heart className="w-4 h-4 text-green-500" />
               Code Commits
             </label>
@@ -120,7 +120,7 @@ const AboutEditor: React.FC<EditorProps> = ({
       {/* Text Content */}
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-          <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
+          <div className="p-2 bg-linear-to-r from-blue-500 to-cyan-500 rounded-lg">
             <FileText className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -133,7 +133,7 @@ const AboutEditor: React.FC<EditorProps> = ({
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <span className="text-blue-500">📝</span>
               Description Paragraph 1
             </label>
@@ -146,7 +146,7 @@ const AboutEditor: React.FC<EditorProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <span className="text-blue-500">✨</span>
               Description Paragraph 2
             </label>
@@ -159,7 +159,7 @@ const AboutEditor: React.FC<EditorProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <span className="text-blue-500">🎯</span>
               Mission Statement
             </label>
@@ -177,7 +177,7 @@ const AboutEditor: React.FC<EditorProps> = ({
       {/* Details Section */}
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-          <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+          <div className="p-2 bg-linear-to-r from-purple-500 to-pink-500 rounded-lg">
             <Code className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -192,7 +192,7 @@ const AboutEditor: React.FC<EditorProps> = ({
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <span className="text-purple-500">🛠️</span>
               Tech Stack (comma separated)
             </label>
@@ -210,7 +210,7 @@ const AboutEditor: React.FC<EditorProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-purple-500" />
                 Location
               </label>
@@ -223,7 +223,7 @@ const AboutEditor: React.FC<EditorProps> = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-purple-500" />
                 Availability
               </label>
@@ -240,7 +240,7 @@ const AboutEditor: React.FC<EditorProps> = ({
       </div>
 
       {/* Preview Section */}
-      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-lg p-6 border border-green-100">
+      <div className="bg-linear-to-br from-green-50 to-blue-50 rounded-2xl shadow-lg p-6 border border-green-100">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-green-500 rounded-lg">
             <Eye className="w-4 h-4 text-white" />

@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
+import MovingObjects from "./MovingObjects";
 
 interface SkillsProps {
   darkMode?: boolean;
@@ -255,7 +256,10 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
       }`}
       suppressHydrationWarning
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Moving Objects Background */}
+      <MovingObjects variant="skills" density="medium" mode="section" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div
           className={`text-center mb-12 md:mb-16 ${
@@ -344,22 +348,22 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                 return (
                   <div
                     key={category.title}
-                    className={`p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-sm transform hover:scale-105 transition-all duration-500 ${
+                    className={`p-6 md:p-8 rounded-2xl md:rounded-3xl card-hover glass-effect ${
                       darkMode
-                        ? "bg-gray-800/50 hover:bg-gray-700/50"
-                        : "bg-white/80 hover:bg-white/90"
-                    } shadow-xl hover:shadow-2xl ${
+                        ? "bg-gray-800/40 border border-gray-700/50"
+                        : "bg-white/60 border border-gray-200/50"
+                    } shadow-xl ${
                       isVisible ? "animate-fadeInUp" : "opacity-0"
-                    }`}
+                    } stagger-item`}
                     style={{
                       animationDelay: `${0.3 + categoryIndex * 0.1}s`,
                     }}
                   >
                     <div className="text-center mb-6 md:mb-8">
                       <div
-                        className={`inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-linear-to-r ${category.color} mb-3 md:mb-4 transform hover:rotate-12 transition-transform duration-300 shadow-lg`}
+                        className={`inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-linear-to-r ${category.color} mb-3 md:mb-4 transform hover:rotate-12 transition-all duration-300 shadow-lg glow-hover`}
                       >
-                        <IconComponent className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                        <IconComponent className="w-7 h-7 md:w-8 md:h-8 text-white animate-bounce-soft" />
                       </div>
                       <h3
                         className={`text-lg md:text-xl font-bold ${
@@ -372,7 +376,15 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
 
                     <div className="space-y-4 md:space-y-6">
                       {(category.skills || []).map((skill, skillIndex) => (
-                        <div key={skill.name} className="space-y-2">
+                        <div
+                          key={skill.name}
+                          className="space-y-2 stagger-item"
+                          style={{
+                            animationDelay: `${
+                              0.3 + categoryIndex * 0.1 + skillIndex * 0.05
+                            }s`,
+                          }}
+                        >
                           <div className="flex justify-between items-center">
                             <span
                               className={`text-sm md:text-base font-medium ${
@@ -382,7 +394,7 @@ const Skills: React.FC<SkillsProps> = ({ darkMode = false }) => {
                               {skill.name}
                             </span>
                             <span
-                              className={`text-xs md:text-sm font-semibold ${
+                              className={`text-xs md:text-sm font-semibold bg-linear-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent ${
                                 darkMode ? "text-gray-400" : "text-gray-600"
                               }`}
                             >

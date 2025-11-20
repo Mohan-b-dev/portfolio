@@ -10,6 +10,7 @@ import {
   ArrowUp,
   Code,
 } from "lucide-react";
+import MovingObjects from "./MovingObjects";
 
 interface FooterProps {
   darkMode?: boolean;
@@ -154,14 +155,21 @@ const Footer: React.FC<FooterProps> = ({ darkMode = false }) => {
 
   return (
     <footer
-      className={`relative w-full py-12 md:py-16 transition-colors duration-300 ${
-        darkMode
-          ? "bg-linear-to-b from-gray-900 to-black"
-          : "bg-linear-to-b from-gray-50 to-white"
-      }`}
+      className={`relative w-full py-12 md:py-16 transition-colors duration-300 overflow-hidden`}
       suppressHydrationWarning
     >
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Moving Objects Background */}
+      <MovingObjects variant="contact" density="medium" mode="section" />
+
+      {/* Background overlay for dark mode */}
+      {darkMode && (
+        <div className="absolute inset-0 bg-linear-to-b from-gray-900/80 to-black/80 pointer-events-none z-5"></div>
+      )}
+      {!darkMode && (
+        <div className="absolute inset-0 bg-linear-to-b from-gray-50/80 to-white/80 pointer-events-none z-5"></div>
+      )}
+
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mb-8 md:mb-12">
           {/* Brand Section */}
